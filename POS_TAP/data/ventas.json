@@ -1,0 +1,27 @@
+[
+    {
+        "fecha": "2026-04-16",
+        "hora": "08:07",
+        "productos": {
+            "pay": 7
+        },
+        "total": 140.0
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "09:44",
+        "productos": {
+            "Pozole Rojo": 2
+        },
+        "total": 100
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "17:04",
+        "productos": {
+            "Chilaquiles Rojos": 3,
+            "Pozole Rojo": 1
+        },
+        "total": 140
+    }
+]

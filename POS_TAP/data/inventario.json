@@ -1,0 +1,18 @@
+{
+    "Mole Poblano": {
+        "precio": 45,
+        "stock": 100
+    },
+    "Enchiladas Verdes": {
+        "precio": 35,
+        "stock": 100
+    },
+    "Chilaquiles Rojos": {
+        "precio": 30,
+        "stock": 97
+    },
+    "Pozole Rojo": {
+        "precio": 50,
+        "stock": 97
+    }
+}

@@ -1,0 +1,105 @@
+import flet as ft
+from flet.controls.material.icons import Icons
+
+
+class GastosView(ft.Container):
+    """
+    Vista de Gastos - Formulario funcional con validaciones y persistencia.
+    """
+    def __init__(self, page, data_manager):
+        super().__init__(expand=True, padding=30)
+        self.main_page = page
+        self.dm        = data_manager
+
+        # Inputs con estilo moderno
+        self.input_concepto = ft.TextField(
+            label="Concepto del gasto",
+            hint_text="Ej: Compra de ingredientes",
+            text_size=16,
+            border_color="#38bdf8",
+            width=400,
+        )
+        
+        self.input_monto = ft.TextField(
+            label="Monto ($)",
+            hint_text="Ej: 150.00",
+            text_size=16,
+            keyboard_type=ft.KeyboardType.NUMBER,
+            border_color="#38bdf8",
+            width=400,
+        )
+
+        self.content = self._build_ui()
+        
+        
+    #Correcion mostrar snackbar
+    
+    def _mostrar_snack(self, mensaje, color):
+    # Limpia snackbars anteriores del overlay
+        self.main_page.overlay[:] = [
+            o for o in self.main_page.overlay
+            if not isinstance(o, ft.SnackBar)
+        ]
+    
+        snack = ft.SnackBar(
+            content=ft.Text(mensaje),
+            bgcolor=color,
+            open=True
+        )
+        self.main_page.overlay.append(snack)
+        self.main_page.update()
+
+    def _guardar_gasto(self, e):
+        #El error se debía a que el monto se guardaba como texto (string), 
+        # y se corrigió convirtiéndolo a un valor numérico para permitir cálculos correctos.
+
+        if not self.input_concepto.value or not self.input_monto.value:
+            self._mostrar_snack("⚠ Por favor, llena ambos campos", ft.Colors.ORANGE_800)
+            return
+
+        try:
+            monto = float(self.input_monto.value)
+        except ValueError:
+            self._mostrar_snack("⚠ El monto debe ser un número válido", ft.Colors.RED_700)
+            return
+
+        self.dm.registrar_gasto(self.input_concepto.value, monto)
+
+        self.input_concepto.value = ""
+        self.input_monto.value    = ""
+
+        self._mostrar_snack("✅ Gasto registrado exitosamente", ft.Colors.GREEN_700)
+
+    def _build_ui(self):
+        formulario = ft.Container(
+            bgcolor="#1e293b",
+            padding=40,
+            border_radius=15,
+            content=ft.Column([
+                ft.Text("Registrar Nuevo Gasto", size=22, weight="bold", color="#38bdf8"),
+                ft.Divider(color="#334155", height=25),
+                self.input_concepto,
+                ft.Container(height=12),
+                self.input_monto,
+                ft.Container(height=24),
+                ft.ElevatedButton(
+                    "GUARDAR GASTO",
+                    icon=Icons.SAVE,
+                    bgcolor="#38bdf8",
+                    color="#0f172a",
+                    height=50,
+                    width=400,
+                    on_click=self._guardar_gasto,
+                    style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8))
+                ),
+            ], horizontal_alignment="center")
+        )
+
+        return ft.Column([
+            ft.Text("Gestión de Gastos", size=28, weight="bold", color="white"),
+            ft.Container(height=30),
+            ft.Row([formulario], alignment="center"),
+        ], expand=True)
+        
+        #error 1: Guardaba datos del monto como string
+        #error 2:
