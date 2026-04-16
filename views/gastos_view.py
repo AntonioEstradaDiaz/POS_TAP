@@ -29,39 +29,44 @@ class GastosView(ft.Container):
         )
 
         self.content = self._build_ui()
+        
+        
+    #Correcion mostrar snackbar
+    #bug visual, no se mostraba el snackbar al guardar la informacion
+    def _mostrar_snack(self, mensaje, color):
+    # Limpia snackbars anteriores del overlay
+        self.main_page.overlay[:] = [
+            o for o in self.main_page.overlay
+            if not isinstance(o, ft.SnackBar)
+        ]
+    
+        snack = ft.SnackBar(
+            content=ft.Text(mensaje),
+            bgcolor=color,
+            open=True
+        )
+        self.main_page.overlay.append(snack)
+        self.main_page.update()
 
     def _guardar_gasto(self, e):
-        # 1. Validar campos vacios
+
         if not self.input_concepto.value or not self.input_monto.value:
-            self.main_page.snack_bar = ft.SnackBar(
-                ft.Text("⚠ Por favor, llena ambos campos"), bgcolor=ft.Colors.ORANGE_800
-            )
-            self.main_page.snack_bar.open = True
-            self.main_page.update()
+            self._mostrar_snack("⚠ Por favor, llena ambos campos", ft.Colors.ORANGE_800)
             return
 
-        # 2. Validar que el monto sea un numero valido
         try:
+            #error tipo de logica y guardaba datos del monto como string
             monto = float(self.input_monto.value)
         except ValueError:
-            self.main_page.snack_bar = ft.SnackBar(
-                ft.Text("⚠ El monto debe ser un número válido"), bgcolor=ft.Colors.RED_700
-            )
-            self.main_page.snack_bar.open = True
-            self.main_page.update()
+            self._mostrar_snack("⚠ El monto debe ser un número válido", ft.Colors.RED_700)
             return
 
-        # 3. Guardar via DataManager
-        self.dm.registrar_gasto(self.input_concepto.value, self.input_monto.value)
+        self.dm.registrar_gasto(self.input_concepto.value, monto)
 
-        # 4. Limpiar formulario
         self.input_concepto.value = ""
         self.input_monto.value    = ""
 
-        self.main_page.snack_bar = ft.SnackBar(
-            ft.Text("✅ Gasto registrado exitosamente"), bgcolor=ft.Colors.GREEN_700
-        )
-        self.main_page.snack_bar.open = True
+        self._mostrar_snack("✅ Gasto registrado exitosamente", ft.Colors.GREEN_700)
 
     def _build_ui(self):
         formulario = ft.Container(
@@ -93,3 +98,5 @@ class GastosView(ft.Container):
             ft.Container(height=30),
             ft.Row([formulario], alignment="center"),
         ], expand=True)
+        
+       

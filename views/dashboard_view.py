@@ -20,8 +20,9 @@ class DashboardView(ft.Container):
         kpis = ft.Row([
             self._kpi_card("Ventas Hoy",  f"${data['ventas_hoy']:.2f}",  Icons.TRENDING_UP,            "#4ade80"),
             self._kpi_card("Gastos Hoy",  f"${data['gastos_hoy']:.2f}",  Icons.TRENDING_DOWN,           "#f87171"),
-            # BUG 1: La ganancia esta calculada al reves (gastos - ventas)
-            self._kpi_card("Ganancia",    f"${data['gastos_hoy'] - data['ventas_hoy']:.2f}",  Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
+            # BUG 1: error de tipo logico ya que estaban invertidas las variables
+            # La ganancia esta calculada al reves (gastos - ventas)
+            self._kpi_card("Ganancia",    f"${data['ventas_hoy'] - data['gastos_hoy']:.2f}",  Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
         ], alignment="spaceEvenly")
 
         # --- Grafico de barras: Top Productos ---
@@ -38,8 +39,9 @@ class DashboardView(ft.Container):
                     ),
                     ft.Container(
                         # BUG 2: Usa la cantidad directamente como altura, sin escalar
-                        # Deberia ser: width=max(4, int((cant / max_cant) * 220))
-                        width=cant,
+                        # Un error de logica, asignaba directamente el valor de cant al ancho y
+                        # deberia ser: width=max(4, int((cant / max_cant) * 220))
+                        width=max(4, int((cant / max_cant) * 220)),
                         height=22,
                         bgcolor="#38bdf8",
                         border_radius=4
