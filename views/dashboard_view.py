@@ -1,12 +1,7 @@
 import flet as ft
 from flet.controls.material.icons import Icons
 
-
 class DashboardView(ft.Container):
-    """
-    Vista de Dashboard - Muestra KPIs del dia, top productos y historico 7 dias.
-    Requiere recibir page y data_manager desde main.py.
-    """
     def __init__(self, page, data_manager):
         super().__init__(expand=True, padding=30)
         self.dm = data_manager
@@ -20,8 +15,8 @@ class DashboardView(ft.Container):
         kpis = ft.Row([
             self._kpi_card("Ventas Hoy",  f"${data['ventas_hoy']:.2f}",  Icons.TRENDING_UP,            "#4ade80"),
             self._kpi_card("Gastos Hoy",  f"${data['gastos_hoy']:.2f}",  Icons.TRENDING_DOWN,           "#f87171"),
-            # BUG 1: La ganancia esta calculada al reves (gastos - ventas)
-            self._kpi_card("Ganancia",    f"${data['gastos_hoy'] - data['ventas_hoy']:.2f}",  Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
+            # CORRECCIÓN BUG 1: Ventas menos Gastos
+            self._kpi_card("Ganancia",    f"${data['ventas_hoy'] - data['gastos_hoy']:.2f}",  Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
         ], alignment="spaceEvenly")
 
         # --- Grafico de barras: Top Productos ---
@@ -32,14 +27,10 @@ class DashboardView(ft.Container):
             spacing=8,
             controls=[
                 ft.Row([
+                    ft.Container(ft.Text(prod, size=12, color="white", no_wrap=True), width=130),
                     ft.Container(
-                        ft.Text(prod, size=12, color="white", no_wrap=True),
-                        width=130
-                    ),
-                    ft.Container(
-                        # BUG 2: Usa la cantidad directamente como altura, sin escalar
-                        # Deberia ser: width=max(4, int((cant / max_cant) * 220))
-                        width=cant,
+                        # CORRECCIÓN BUG 2: Escalado proporcional (Ancho máximo 220)
+                        width=max(4, int((cant / max_cant) * 220)),
                         height=22,
                         bgcolor="#38bdf8",
                         border_radius=4
@@ -59,15 +50,11 @@ class DashboardView(ft.Container):
             ])
         )
 
-        # --- Grafico historico: Ultimos 7 dias ---
+        # --- Grafico historico ---
         max_v = max((d["total"] for d in historico), default=1) or 1
         chart_h = 140
-
         puntos = ft.Row(
-            spacing=0,
-            expand=True,
-            alignment="spaceAround",
-            vertical_alignment="end",
+            spacing=0, expand=True, alignment="spaceAround", vertical_alignment="end",
             controls=[
                 ft.Column([
                     ft.Text(f"${d['total']:.0f}", size=9, color="#38bdf8", text_align="center"),
