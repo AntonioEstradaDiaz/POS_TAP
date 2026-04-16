@@ -1,1 +1,54 @@
-[]
+[
+    {
+        "fecha": "2026-04-15",
+        "hora": "21:46",
+        "productos": {
+            "Mole Poblano": 1
+        },
+        "total": 45
+    },
+    {
+        "fecha": "2026-04-15",
+        "hora": "21:46",
+        "productos": {
+            "Chiles Rellenos": 1
+        },
+        "total": 40
+    },
+    {
+        "fecha": "2026-04-15",
+        "hora": "22:00",
+        "productos": {
+            "Pozole Rojo": 1
+        },
+        "total": 50
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "09:32",
+        "productos": {
+            "Mole Poblano": 2,
+            "Pozole Rojo": 2
+        },
+        "total": 190
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "09:37",
+        "productos": {
+            "Pozole Rojo": 1,
+            "Chilaquiles Rojos": 1
+        },
+        "total": 80
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "17:30",
+        "productos": {
+            "Mole Poblano": 1,
+            "Chiles Rellenos": 1,
+            "Tlayuda Oaxaquena": 1
+        },
+        "total": 140
+    }
+]

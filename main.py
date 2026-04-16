@@ -35,7 +35,7 @@ def main(page: ft.Page):
         elif idx == 3:
             content_area.content = HistorialView(page, dm)    # Dia 2: Funcional
         elif idx == 4:
-            content_area.content = CierreDiaView()         # Dia 3: Pendiente
+            content_area.content = CierreDiaView()        # Dia 3: Pendiente
         page.update()
 
     # 5. Barra lateral de navegacion

@@ -128,7 +128,7 @@ class DataManager:
         gasto = {
             "fecha":    datetime.now().strftime("%Y-%m-%d"),
             "concepto": concepto,
-            "monto":    monto
+            "monto":    float(monto)
         }
         gastos = self._cargar(self.f_gastos)
         gastos.append(gasto)
@@ -162,7 +162,9 @@ class DataManager:
 
         ventas_hoy = [v for v in ventas if v.get("fecha") == fecha_hoy]
         total_v = sum(v["total"] for v in ventas_hoy)
-        total_g = sum(g["monto"] for g in gastos if g.get("fecha") == fecha_hoy)
+        #total_g = sum(g["monto"] for g in gastos if g.get("fecha") == fecha_hoy)
+        #Correcion
+        total_g = sum(float(g["monto"]) for g in gastos if g.get("fecha") == fecha_hoy)
 
         conteo = {}
         for v in ventas_hoy:
