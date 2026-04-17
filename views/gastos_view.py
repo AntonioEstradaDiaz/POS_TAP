@@ -52,7 +52,8 @@ class GastosView(ft.Container):
             return
 
         # 3. Guardar via DataManager
-        self.dm.registrar_gasto(self.input_concepto.value, self.input_monto.value)
+        #error 1 self.dm.registrar_gasto(self.input_concepto.value, self.input_monto.value)
+        self.dm.registrar_gasto(self.input_concepto.value, monto)
 
         # 4. Limpiar formulario
         self.input_concepto.value = ""
@@ -61,8 +62,10 @@ class GastosView(ft.Container):
         self.main_page.snack_bar = ft.SnackBar(
             ft.Text("✅ Gasto registrado exitosamente"), bgcolor=ft.Colors.GREEN_700
         )
+        # error 2 self.main_page.snack_bar.open = True
         self.main_page.snack_bar.open = True
-
+        self.main_page.update()
+        
     def _build_ui(self):
         formulario = ft.Container(
             bgcolor="#1e293b",
