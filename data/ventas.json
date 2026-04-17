@@ -1,0 +1,37 @@
+[
+    {
+        "fecha": "2026-04-16",
+        "hora": "08:01",
+        "productos": {
+            "Mole Poblano": 1,
+            "Enchiladas Verdes": 1
+        },
+        "total": 80
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "08:08",
+        "productos": {
+            "Chiles Rellenos": 2
+        },
+        "total": 80
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "09:23",
+        "productos": {
+            "Enchiladas Verdes": 2
+        },
+        "total": 70
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "09:26",
+        "productos": {
+            "Tlayuda Oaxaquena": 1,
+            "Chilaquiles Rojos": 1,
+            "Pozole Rojo": 1
+        },
+        "total": 135
+    }
+]

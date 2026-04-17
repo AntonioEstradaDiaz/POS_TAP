@@ -1,0 +1,26 @@
+{
+    "Mole Poblano": {
+        "precio": 45,
+        "stock": 96
+    },
+    "Enchiladas Verdes": {
+        "precio": 35,
+        "stock": 94
+    },
+    "Chilaquiles Rojos": {
+        "precio": 30,
+        "stock": 99
+    },
+    "Pozole Rojo": {
+        "precio": 50,
+        "stock": 99
+    },
+    "Tlayuda Oaxaquena": {
+        "precio": 55,
+        "stock": 99
+    },
+    "papa asada": {
+        "precio": 100.0,
+        "stock": 100
+    }
+}

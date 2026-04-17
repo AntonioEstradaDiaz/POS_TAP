@@ -4,20 +4,22 @@ from flet.controls.material.icons import Icons
 
 class GastosView(ft.Container):
     """
-    Vista de Gastos - SOLO ESTRUCTURA DE INTERFAZ
-    Sin datos ni logica funcional.
+    Vista de Gastos - Formulario funcional con validaciones y persistencia.
     """
-    def __init__(self):
+    def __init__(self, page, data_manager):
         super().__init__(expand=True, padding=30)
+        self.main_page = page
+        self.dm        = data_manager
 
-        input_concepto = ft.TextField(
+        # Inputs con estilo moderno
+        self.input_concepto = ft.TextField(
             label="Concepto del gasto",
             hint_text="Ej: Compra de ingredientes",
             text_size=16,
             border_color="#38bdf8",
             width=400,
         )
-        input_monto = ft.TextField(
+        self.input_monto = ft.TextField(
             label="Monto ($)",
             hint_text="Ej: 150.00",
             text_size=16,
@@ -26,6 +28,38 @@ class GastosView(ft.Container):
             width=400,
         )
 
+        self.content = self._build_ui()
+
+    def _guardar_gasto(self, e):
+        # 1. Validar campos vacios
+        if not self.input_concepto.value or not self.input_monto.value:
+            self.main_page.snack_bar = ft.SnackBar(
+                ft.Text("⚠ Por favor, llena ambos campos"), bgcolor=ft.Colors.ORANGE_800
+            )
+            self.main_page.snack_bar.open = True
+            self.main_page.update()
+            return
+
+       # 2. Validar que el monto sea un numero valido
+        try:
+            monto = float(self.input_monto.value) # <--- Aquí creaste la variable correcta
+        except ValueError:
+            # ... manejo de error ...
+            return
+
+        # 3. Guardar via DataManager (CORREGIDO)
+        self.dm.registrar_gasto(self.input_concepto.value, monto)
+        
+        # 4. Limpiar formulario
+        self.input_concepto.value = ""
+        self.input_monto.value    = ""
+
+        self.main_page.snack_bar = ft.SnackBar(
+            ft.Text("✅ Gasto registrado exitosamente"), bgcolor=ft.Colors.GREEN_700
+        )
+        self.main_page.snack_bar.open = True
+
+    def _build_ui(self):
         formulario = ft.Container(
             bgcolor="#1e293b",
             padding=40,
@@ -33,9 +67,9 @@ class GastosView(ft.Container):
             content=ft.Column([
                 ft.Text("Registrar Nuevo Gasto", size=22, weight="bold", color="#38bdf8"),
                 ft.Divider(color="#334155", height=25),
-                input_concepto,
+                self.input_concepto,
                 ft.Container(height=12),
-                input_monto,
+                self.input_monto,
                 ft.Container(height=24),
                 ft.ElevatedButton(
                     "GUARDAR GASTO",
@@ -44,12 +78,13 @@ class GastosView(ft.Container):
                     color="#0f172a",
                     height=50,
                     width=400,
+                    on_click=self._guardar_gasto,
                     style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8))
                 ),
             ], horizontal_alignment="center")
         )
 
-        self.content = ft.Column([
+        return ft.Column([
             ft.Text("Gestión de Gastos", size=28, weight="bold", color="white"),
             ft.Container(height=30),
             ft.Row([formulario], alignment="center"),
