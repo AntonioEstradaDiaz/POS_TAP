@@ -75,7 +75,7 @@ class GastosView(ft.Container):
                 ft.Container(height=12),
                 self.input_monto,
                 ft.Container(height=24),
-                ft.ElevatedButton(
+                ft.Button(
                     "GUARDAR GASTO",
                     icon=Icons.SAVE,
                     bgcolor="#38bdf8",

@@ -66,7 +66,7 @@ class HistorialView(ft.Container):
             self.lista.controls.append(
                 ft.Container(
                     ft.Text("Sin ventas registradas hoy.", color="#64748b", size=15),
-                    padding=ft.padding.only(top=20)
+                    padding=ft.Padding.only(top=20)
                 )
             )
         else:
@@ -83,7 +83,7 @@ class HistorialView(ft.Container):
                     ft.Container(
                         bgcolor="#0f172a" if i % 2 == 0 else "#1e293b",
                         border_radius=8,
-                        padding=ft.padding.symmetric(horizontal=10, vertical=8),
+                        padding=ft.Padding.symmetric(horizontal=10, vertical=8),
                         content=ft.Row([
                             ft.Container(
                                 ft.Text(hora, size=14, color="#38bdf8", weight="bold"),

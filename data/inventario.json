@@ -1,7 +1,7 @@
 {
     "Mole Poblano": {
         "precio": 45,
-        "stock": 100
+        "stock": 98
     },
     "Enchiladas Verdes": {
         "precio": 35,
@@ -13,11 +13,11 @@
     },
     "Pozole Rojo": {
         "precio": 50,
-        "stock": 100
+        "stock": 93
     },
     "Chiles Rellenos": {
         "precio": 40,
-        "stock": 100
+        "stock": 82
     },
     "Tlayuda Oaxaquena": {
         "precio": 55,

@@ -1,1 +1,17 @@
-[]
+[
+    {
+        "fecha": "2026-04-16",
+        "concepto": "Tomate",
+        "monto": "200"
+    },
+    {
+        "fecha": "2026-04-16",
+        "concepto": "Hielo",
+        "monto": "70"
+    },
+    {
+        "fecha": "2026-04-16",
+        "concepto": "qqqwq",
+        "monto": "234"
+    }
+]

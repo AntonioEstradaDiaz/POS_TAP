@@ -43,7 +43,7 @@ class CierreDiaView(ft.Container):
                     size=14, color="#94a3b8",
                 ),
                 ft.Container(height=16),
-                ft.ElevatedButton(
+                ft.Button(
                     "🌙  Cerrar Día",
                     bgcolor="#f59e0b",
                     color="#0f172a",
