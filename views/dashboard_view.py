@@ -46,6 +46,10 @@ class DashboardView(ft.Container):
                         bgcolor="#38bdf8",
                         border_radius=4
                     ),
+                    #Lógica Contable: Se corrigió el cálculo de la Ganancia. Anteriormente restaba ventas de gastos (resultado negativo); ahora aplica la fórmula correcta: ventas_hoy - gastos_hoy.
+
+#Escalado de Gráficos: Se implementó una normalización dinámica para las barras de "Top Productos". En lugar de usar la cantidad como píxeles fijos, ahora se calcula el ancho proporcionalmente al valor máximo, asegurando que las gráficas sean visibles y no se desborden.
+#Consistencia Visual: Se ajustaron los límites mínimos de altura y ancho en los contenedores (max(4, ...)), garantizando que incluso los valores pequeños o en cero mantengan una presencia visual mínima en la interfaz.
                     ft.Text(f" {cant}", size=12, color="#38bdf8"),
                 ], vertical_alignment="center")
                 for prod, cant in top.items()

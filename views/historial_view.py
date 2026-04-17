@@ -81,6 +81,12 @@ class HistorialView(ft.Container):
                 #detalle = str(productos)
                 detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())
                 self.lista.controls.append(
+                    #Formateo de Productos: Se corrigió la visualización del detalle de venta. En lugar de mostrar el diccionario crudo (ej. {'Refresco': 2}), ahora se formatea como una lista legible (ej. 2x Refresco) mediante una unión de cadenas.
+
+#Corrección de Ámbito (Scope): Se arreglaron las referencias a self.lista. Se eliminó el uso de variables locales inexistentes en los métodos de actualización, lo que evitaba que la interfaz se refrescara correctamente.
+#Limpieza de Controles: Se corrigió el error en el método de recarga donde se intentaba acceder a atributos de lista de Python (list) como si fueran controles de Flet. Ahora se utiliza self.lista.controls.clear() de forma adecuada.
+
+#Orden Cronológico: Se implementó reversed(ventas) para que las transacciones más recientes aparezcan al principio de la lista, mejorando la usabilidad del historial.
                     ft.Container(
                         bgcolor="#0f172a" if i % 2 == 0 else "#1e293b",
                         border_radius=8,
