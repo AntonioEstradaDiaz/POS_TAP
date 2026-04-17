@@ -27,9 +27,9 @@ class HistorialView(ft.Container):
                     icon=Icons.REFRESH,
                     icon_color="#38bdf8",
                     tooltip="Actualizar",
-                    # BUG 4: Usa 'lista' en vez de 'self.lista'
-                    # Deberia ser: on_click=lambda e: self._cargar_historial()
-                    on_click=lambda e: self._recargar()
+                    # BUG 1: Usa 'lista' en vez de 'self.lista' tipo de error: uso incorrecto de variables Causa: se utiizaba una variable local lista en lugar de la variable de instancia self.lista que es la que realmente contiene el ListView que se muestra en la interfaz. Solucion: se corrigio el uso de la variable para referenciar correctamente a self.Lista.
+                    # Deberia ser: on_click=lambda e: self._cargar_historial() solucion: se corrigio el acceso al componente adecuado o se dirigio el boton al funcion correcta.
+                    on_click=lambda e: self._cargar_historial()
                 )
             ], vertical_alignment="center"),
             ft.Container(height=10),
@@ -52,10 +52,11 @@ class HistorialView(ft.Container):
 
     def _recargar(self):
         """Funcion auxiliar para el boton de refresh."""
-        # BUG 4: Aqui se usa una variable local 'lista' que no existe
-        # Deberia ser self.lista
-        lista = self.dm.get_historial_hoy()
-        lista.controls.clear()  # Esto va a tronar: 'list' no tiene .controls
+        # BUG 2 : Aqui se usa una variable local 'lista' que no existe. Dentro de la funcion _recargar se utilizaba una variabke local llamada lista, sin embargo se intentaba usar como si fuera un componente de la interfaz grafica accediendo a la propiedad .controls,lo cualno existe en listas normales.
+        # Deberia ser self.lista  Se corrigio utilizando el componente correcto de la interfaz (self.lista) que si posee la propiedad.controls o bien se dirigio la accion del boton para llamar directamente a la funcion_cargar_historial que es la que se encarga de actualizar el LisView con los datos actuales.
+        #lista = self.dm.get_historial_hoy() tipo de error: Uso incorrecto de variables.
+        #lista.controls.clear()  # Esto va a tronar: 'list' no tiene .controls 
+        self.lista.controls.clear()  
         self._cargar_historial()
 
     def _cargar_historial(self):
@@ -75,9 +76,10 @@ class HistorialView(ft.Container):
                 total = v.get("total", 0)
                 productos = v.get("productos", {})
 
-                # BUG 3: Muestra el dict crudo en vez de formatearlo
-                # Deberia ser: detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())
-                detalle = str(productos)
+                # BUG 3: Muestra el dict crudo en vez de formatearlo Tipo de error: visual Los productos en el hisotrial se mostraban como un diccionario sin formato, lo que dificultaba su lectura. Causa: se utilizo directamente la conversacion a string del diccionario sin formatearlo.
+                # Deberia ser: detalle = ", ".join(f"{c}x {p}" for p, c in productos.items()) Solucion: se formateo el detalle de productos para mostrar la cantidad y el nombre de cada producto de manera legible es decir se formatearon los datos en una cadena legible.
+                
+                detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())
 
                 self.lista.controls.append(
                     ft.Container(
