@@ -22,6 +22,27 @@ class DashboardView(ft.Container):
             self._kpi_card("Gastos Hoy",  f"${data['gastos_hoy']:.2f}",  Icons.TRENDING_DOWN,           "#f87171"),
             # BUG 1: La ganancia esta calculada al reves (gastos - ventas)
             # self._kpi_card("Ganancia",    f"${data['gastos_hoy'] - data['ventas_hoy']:.2f}",  Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
+            #Antes:
+#La ganancia se calculaba incorrectamente, dando valores negativos o incorrectos.
+
+#Ejemplo:
+#``` Ventas = 1000
+ #   Gastos = 300
+
+  #  Resultado incorrecto: 300 - 1000 = -700
+
+#- EXPLICACION DEL ERROR
+ # - Tipo de error:
+  #  Lógica matemática
+   # tipo de dato:
+    #- float (Numeros decimales) 
+  #- Que causaba el error:
+   # Orden incorrecto en la operación
+  #- Como se soluciono:
+   # ```self._kpi_card("Ganancia",    f"${data['ventas_hoy'] - data['gastos_hoy']:.2f}",  #Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),```
+ # - Resultado:
+   # ```1000 - 300 = 700 (correcto)```
+    #Ahora la ganancia representa correctamente las utilidades del negocio.
             self._kpi_card("Ganancia",    f"${data['ventas_hoy'] - data['gastos_hoy']:.2f}",  Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
         ], alignment="spaceEvenly")
 
@@ -41,6 +62,30 @@ class DashboardView(ft.Container):
                         # BUG 2: Usa la cantidad directamente como altura, sin escalar
                         # Deberia ser: width=max(4, int((cant / max_cant) * 220))
                         # width=cant,
+                        #Antes:
+#La longitud de la barra dependía directamente del valor real.
+
+#Ejemplo:
+
+#Producto A: 2 → barra muy pequeña
+#Producto B: 100 → barra enorme
+
+#Esto hacía que la gráfica fuera desproporcionada y poco útil visualmente.
+
+#- EXPLICACION DEL ERROR
+ # - Tipo de error:
+  # Lógica / visualización
+   # - Tipo de dato:
+    #  int (cantidad de productos vendidos)
+  #- Que causaba el error:
+    #No se aplicó una escala proporcional
+  #- Como se soluciono:
+   # ``` width=max(4, int((cant / max_cant) * 220)),```
+    #- ```cant / max_cant``` → obtiene proporción (0 a 1)
+    #- ```* 220``` → escala al tamaño máximo visual
+    #- ```max(4, ...)``` → evita barras invisibles
+  #- Resultado:
+   # Las barras ahora representan correctamente la relación entre productos.
                         width=max(4, int((cant / max_cant) * 220)),
                         height=22,
                         bgcolor="#38bdf8",

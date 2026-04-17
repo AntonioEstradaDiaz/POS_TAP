@@ -29,6 +29,33 @@ class HistorialView(ft.Container):
                     tooltip="Actualizar",
                     # BUG 4: Usa 'lista' en vez de 'self.lista'
                     # Deberia ser: on_click=lambda e: self._cargar_historial()
+                    #Antes:
+#El botón llama a _recargar(), pero esa función está mal implementada:
+#``` def _recargar(self):
+ #     lista = self.dm.get_historial_hoy()
+  #    lista.controls.clear()  # ERROR
+   #   self._cargar_historial()
+
+#Problema:
+#- lista es un list normal de Python
+#- Se intenta usar .controls (propio de Flet)
+
+#Resultado:
+#```'list' object has no attribute 'controls'```
+
+#- EXPLICACION DEL ERROR
+ # - Tipo de error:
+  #  POO (Programación Orientada a Objetos) / referencia incorrecta
+   # tipo de dato:
+    #- list (incorrecto en este contexto)
+    #-  ft.ListView (correcto)
+ # - Que causaba el error:
+  #  Confusión entre datos y componente visual
+  #- Como se soluciono:
+   # llamar directamente a _cargar_historial()
+    #```on_click=lambda e: self._cargar_historial()```
+  #- Resultado:
+    #El botón actualiza correctamente el historial sin errores
                     on_click=lambda e: self._cargar_historial()
                 )
             ], vertical_alignment="center"),
@@ -56,6 +83,27 @@ class HistorialView(ft.Container):
         # Deberia ser self.lista
         #lista = self.dm.get_historial_hoy()
         #lista.controls.clear()  # Esto va a tronar: 'list' no tiene .controls
+        #Antes:
+#Se generaba este error:
+
+#```'list' object has no attribute 'controls'```
+#Problema:
+#- lista es una lista de Python (list)
+#- Pero .controls es una propiedad de un control de Flet (ListView)
+
+#- EXPLICACION DEL ERROR
+ # - Tipo de error:
+  #  POO (Programación Orientada a Objetos) / referencia incorrecta
+   # tipo de dato:
+    #- list (incorrecto en este contexto)
+    #-  ft.ListView (correcto)
+  #- Que causaba el error:
+   # Confusión entre datos y componente visual
+  #- Como se soluciono:
+   # ```self.lista.controls.clear()
+    #    self._cargar_historial()```
+  #- Resultado:
+   # Se limpia correctamente el componente visual sin errores.
         self.lista.controls.clear()
         self._cargar_historial()
 
@@ -79,6 +127,32 @@ class HistorialView(ft.Container):
                 # BUG 3: Muestra el dict crudo en vez de formatearlo
                 # Deberia ser: detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())
                 #detalle = str(productos)
+                #Antes:
+#Se mostraba el diccionario así:
+
+#```{'Taco': 2, 'Refresco': 1}```
+
+#Esto no es amigable para el usuario final.
+
+#- EXPLICACION DEL ERROR
+ # - Tipo de error:
+  # Lógica / presentación de datos
+   # - Tipo de dato:
+    # dict (diccionario de productos)
+  #- Que causaba el error:
+   # Conversión directa a string sin formato
+  #- Como se soluciono:
+   # ``` detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())```
+    #Qué hace:
+    #- Recorre el diccionario
+    #- Formatea cada elemento como: cantidad x producto
+    #- Los une en una cadena
+    
+  #  Ejemplo:
+   # ```2x Taco, 1x Refresco``` 
+   
+  #- Resultado:
+   #La información ahora es clara y entendible para el usuario.
                 detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())
                 self.lista.controls.append(
                     ft.Container(
