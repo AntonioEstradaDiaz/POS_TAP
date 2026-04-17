@@ -52,7 +52,30 @@ class GastosView(ft.Container):
             return
 
         # 3. Guardar via DataManager
-        self.dm.registrar_gasto(self.input_concepto.value, self.input_monto.value)
+        #error 1 self.dm.registrar_gasto(self.input_concepto.value, self.input_monto.value)
+       # Antes:
+# El vaor del monto (self.input_monto.value) se enviaba como string es decir:
+# "150.00 Aunque antes se hacia la validacion:
+# monto = float(self.input_monto.value) ese valor convertido no se utilizaba.
+
+# Problema:
+#El sistema guarda el monto como texto en lugar de número, lo que puede provocar:
+#- errores en operaciones matemáticas (sumas, restas)
+#- resultados incorrectos en el dashboard (totales mal calculados)
+
+#- EXPLICACION DEL ERROR
+  #- Tipo de error:
+   # tipo de dato/ logico:
+    #- string (incorrecto)
+   # - float (correcto) 
+ # - Que causaba el error:
+   # No usar la variable ya convertida (monto)
+  #- Como se soluciono:
+    #self.dm.registrar_gasto(self.input_concepto.value, monto) ```
+  #- Resultado:
+   # Ahora los datos se almacenan como números (float), permitiendo cálculos correctos en toda la      aplicación.
+        
+        self.dm.registrar_gasto(self.input_concepto.value, monto)
 
         # 4. Limpiar formulario
         self.input_concepto.value = ""
@@ -61,8 +84,27 @@ class GastosView(ft.Container):
         self.main_page.snack_bar = ft.SnackBar(
             ft.Text("✅ Gasto registrado exitosamente"), bgcolor=ft.Colors.GREEN_700
         )
-        self.main_page.snack_bar.open = True
+        # error 2 self.main_page.snack_bar.open = True
+        #Antes:
+#El mensaje (SnackBar) no siempre aparecía en pantalla.
 
+#Problema:
+#En Flet, los cambios en la interfaz no se reflejan automáticamente, se necesita actualizar la #vista manualmente.
+
+#- EXPLICACION DEL ERROR
+ # - Tipo de error:
+  # Flujo del framework (Flet) 
+  #- Que causaba el error:
+   # Falta de actualización de la UI
+  #- Como se soluciono:
+   # ``` self.main_page.snack_bar.open = True
+    #    self.main_page.update()```
+  #- Resultado:
+   # El mensaje ahora se muestra correctamente cada vez que se registra un gasto.
+        
+        self.main_page.snack_bar.open = True
+        self.main_page.update()
+        
     def _build_ui(self):
         formulario = ft.Container(
             bgcolor="#1e293b",
