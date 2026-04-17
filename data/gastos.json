@@ -13,5 +13,10 @@
         "fecha": "2026-04-16",
         "concepto": "qqqwq",
         "monto": "234"
+    },
+    {
+        "fecha": "2026-04-16",
+        "concepto": "fa",
+        "monto": "213"
     }
 ]

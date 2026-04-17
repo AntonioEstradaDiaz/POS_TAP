@@ -54,9 +54,10 @@ class HistorialView(ft.Container):
         """Funcion auxiliar para el boton de refresh."""
         # BUG 4: Aqui se usa una variable local 'lista' que no existe
         # Deberia ser self.lista
-        lista = self.dm.get_historial_hoy()
-        lista.controls.clear()  # Esto va a tronar: 'list' no tiene .controls
+        self.lista = self.dm.get_historial_hoy()
+        self.lista.controls.clear()  
         self._cargar_historial()
+        #e corrigió a self.lista = self.dm.get_historial_hoy() para actualizar correctamente el atributo de la clase.
 
     def _cargar_historial(self):
         self.lista.controls.clear()
@@ -67,6 +68,7 @@ class HistorialView(ft.Container):
                 ft.Container(
                     ft.Text("Sin ventas registradas hoy.", color="#64748b", size=15),
                     padding=ft.Padding.only(top=20)
+                    #Se reemplazó ft.padding.only(top=20) por ft.Padding.only(top=20)
                 )
             )
         else:
@@ -83,6 +85,7 @@ class HistorialView(ft.Container):
                     ft.Container(
                         bgcolor="#0f172a" if i % 2 == 0 else "#1e293b",
                         border_radius=8,
+                        #Se reemplazó ft.padding.only(top=20) por ft.Padding.only(top=20)
                         padding=ft.Padding.symmetric(horizontal=10, vertical=8),
                         content=ft.Row([
                             ft.Container(

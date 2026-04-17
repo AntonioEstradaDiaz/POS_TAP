@@ -23,5 +23,21 @@
             "Pozole Rojo": 7
         },
         "total": 830
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "20:18",
+        "productos": {
+            "Chilaquiles Rojos": 6
+        },
+        "total": 180
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "20:18",
+        "productos": {
+            "Pozole Rojo": 1
+        },
+        "total": 50
     }
 ]

@@ -162,6 +162,7 @@ class DataManager:
 
         ventas_hoy = [v for v in ventas if v.get("fecha") == fecha_hoy]
         total_v = sum(v["total"] for v in ventas_hoy)
+        #TypeError porque montos guardados anteriormente en el JSON eran strings. Se cambió a float(g["monto"])
         total_g = sum(float(g["monto"]) for g in gastos if g.get("fecha") == fecha_hoy)
 
         conteo = {}
