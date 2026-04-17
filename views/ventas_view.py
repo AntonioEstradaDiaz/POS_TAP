@@ -20,7 +20,8 @@ class AddProductDialog(ft.AlertDialog):
         self.content = ft.Column([self.txt_nombre, self.txt_precio], tight=True)
         self.actions = [
             ft.TextButton("Cancelar", on_click=self._cancelar),
-            ft.ElevatedButton("Guardar", on_click=self._guardar, bgcolor="#38bdf8", color="#0f172a")
+            #  Se reemplazo el uso de ft.ElevatedButton por ft.Button en las líneas
+            ft.Button("Guardar", on_click=self._guardar, bgcolor="#38bdf8", color="#0f172a")
         ]
         self.actions_alignment = ft.MainAxisAlignment.END
 
@@ -76,8 +77,9 @@ class DeleteProductDialog(ft.AlertDialog):
         self.txt_mensaje = ft.Text("")
         self.content = self.txt_mensaje
         self.actions = [
+             #  Se reemplazo el uso de ft.ElevatedButton por ft.Button en las líneas
             ft.TextButton("Cancelar", on_click=self._cancelar),
-            ft.ElevatedButton("Eliminar Definitivamente", on_click=self._eliminar, bgcolor="#ef4444", color="white")
+            ft.Button("Eliminar Definitivamente", on_click=self._eliminar, bgcolor="#ef4444", color="white")
         ]
         self.actions_alignment = ft.MainAxisAlignment.END
 
@@ -101,7 +103,8 @@ class DeleteProductDialog(ft.AlertDialog):
             self.dm.eliminar_producto(self.producto_a_eliminar)
             self.open = False
             self.on_success(self.producto_a_eliminar)
-
+            self.main_page.update() 
+            # faltaba self.main_page.update() al final, lo que causaba que el diálogo no se cerrara visualmente tras eliminar un producto aunque internamente self.open = False ya estaba presente.
 
 class CartItemRow(ft.Row):
     """
@@ -320,7 +323,8 @@ class VentasView(ft.Container):
                 ft.Divider(),
                 ft.Row([ft.Text("TOTAL", size=20), self.txt_total], alignment="spaceBetween"),
                 ft.Container(height=10),
-                ft.ElevatedButton("COBRAR", on_click=self._cobrar,
+                 #  Se reemplazo el uso de ft.ElevatedButton por ft.Button en las líneas
+                ft.Button("COBRAR", on_click=self._cobrar,
                                   bgcolor="#38bdf8", color="#0f172a", height=60,
                                   width=float('inf'),
                                   style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8))),
