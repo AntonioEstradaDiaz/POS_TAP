@@ -29,7 +29,9 @@ class HistorialView(ft.Container):
                     tooltip="Actualizar",
                     # BUG 4: Usa 'lista' en vez de 'self.lista'
                     # Deberia ser: on_click=lambda e: self._cargar_historial()
-                    on_click=lambda e: self._recargar()
+                    # Tipo De Error Poo
+                    #Se corrigió la referencia al nombre exacto del método definido en la clase: self._cargar_historial().
+                    on_click=lambda e: self.lista_cargar_historial()
                 )
             ], vertical_alignment="center"),
             ft.Container(height=10),
@@ -52,11 +54,15 @@ class HistorialView(ft.Container):
 
     def _recargar(self):
         """Funcion auxiliar para el boton de refresh."""
+        # BUG CORREJIDO
         # BUG 4: Aqui se usa una variable local 'lista' que no existe
         # Deberia ser self.lista
-        lista = self.dm.get_historial_hoy()
-        lista.controls.clear()  # Esto va a tronar: 'list' no tiene .controls
-        self._cargar_historial()
+        # Tipo De Error De Atributos 
+        # 1. Se diferencia entre la data (los datos crudos) y el widget (el componente visual).
+        #2. Se asegura el uso de self. para que la persistencia del objeto sea correcta a través de los métodos.
+        self.lista = self.dm.get_historial_hoy()
+        self.lista.controls.clear()  # Esto va a tronar: 'list' no tiene .controls
+        self.lista_cargar_historial()
 
     def _cargar_historial(self):
         self.lista.controls.clear()
@@ -74,10 +80,12 @@ class HistorialView(ft.Container):
                 hora = v.get("hora", "--:--")
                 total = v.get("total", 0)
                 productos = v.get("productos", {})
-
+                # BUG CORREGIDO
                 # BUG 3: Muestra el dict crudo en vez de formatearlo
                 # Deberia ser: detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())
-                detalle = str(productos)
+               #Tipo D Error Formateo de Datos / UX
+                # Se utilizó una comprensión de listas combinada con el método .join(). Esto transforma el diccionario en una cadena de texto elegante (String) donde cada par clave-valor se formatea como "Cantidad x Producto" y se separa por comas.
+                detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())
 
                 self.lista.controls.append(
                     ft.Container(
