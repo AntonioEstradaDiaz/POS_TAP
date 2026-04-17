@@ -18,10 +18,13 @@ class DashboardView(ft.Container):
 
         # --- Tarjetas KPI ---
         kpis = ft.Row([
-            self._kpi_card("Ventas Hoy",  f"${data['ventas_hoy']:.2f}",  Icons.TRENDING_UP,            "#4ade80"),
-            self._kpi_card("Gastos Hoy",  f"${data['gastos_hoy']:.2f}",  Icons.TRENDING_DOWN,           "#f87171"),
+            self._kpi_card("Ventas Hoy",  f"${data['ventas_hoy']:.2f}",  Icons.TRENDING_UP,   "#4ade80"),
+            self._kpi_card("Gastos Hoy",  f"${data['gastos_hoy']:.2f}",  Icons.TRENDING_DOWN, "#f87171"),
+            # BUG CORREGIDO: Ventas menos gastos
             # BUG 1: La ganancia esta calculada al reves (gastos - ventas)
-            self._kpi_card("Ganancia",    f"${data['gastos_hoy'] - data['ventas_hoy']:.2f}",  Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
+            # Tipo de Error es Lógia de Negocios
+            #Se invirtió el orden de los operandos en la expresión para seguir la fórmula contable estándar: $Ganancia = Ingresos - Egresos$.
+            self._kpi_card("Ganancia",    f"${data['ventas_hoy'] - data['gastos_hoy']:.2f}",  Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
         ], alignment="spaceEvenly")
 
         # --- Grafico de barras: Top Productos ---
@@ -37,9 +40,12 @@ class DashboardView(ft.Container):
                         width=130
                     ),
                     ft.Container(
+                        # BUG CORREGIDO 
                         # BUG 2: Usa la cantidad directamente como altura, sin escalar
                         # Deberia ser: width=max(4, int((cant / max_cant) * 220))
-                        width=cant,
+                        # Tipo De Error es Logico Visual/UI
+                        #Se implementó una función de mapeo lineal (Normalización). Al dividir cant / max_cant, obtienes un valor entre 0 y 1 (porcentaje), que luego multiplicas por el ancho total disponible (220px). El uso de max(4, ...) actúa como un "piso" de seguridad para que siempre haya algo visible.
+                        width=max(4, int((cant / max_cant) * 220)),
                         height=22,
                         bgcolor="#38bdf8",
                         border_radius=4
