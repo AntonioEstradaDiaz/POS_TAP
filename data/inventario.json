@@ -1,26 +1,30 @@
 {
-    "Mole Poblano": {
-        "precio": 45,
+    "Tortas": {
+        "precio": 25.0,
+        "stock": 98
+    },
+    "Chilaquiles": {
+        "precio": 75.0,
+        "stock": 99
+    },
+    "Burritos": {
+        "precio": 70.0,
         "stock": 100
     },
-    "Enchiladas Verdes": {
-        "precio": 35,
+    "Alambre": {
+        "precio": 130.0,
+        "stock": 99
+    },
+    "Taquitos": {
+        "precio": 10.0,
+        "stock": 99
+    },
+    "Agua": {
+        "precio": 15.0,
         "stock": 100
     },
-    "Chilaquiles Rojos": {
-        "precio": 30,
-        "stock": 100
-    },
-    "Pozole Rojo": {
-        "precio": 50,
-        "stock": 100
-    },
-    "Chiles Rellenos": {
-        "precio": 40,
-        "stock": 100
-    },
-    "Tlayuda Oaxaquena": {
-        "precio": 55,
-        "stock": 100
+    "Refresco": {
+        "precio": 18.0,
+        "stock": 98
     }
 }
