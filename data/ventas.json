@@ -1,1 +1,23 @@
-[]
+[
+    {
+        "fecha": "2026-04-16",
+        "hora": "08:00",
+        "productos": {
+            "Tortas": 1,
+            "Refresco": 1
+        },
+        "total": 43.0
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "09:28",
+        "productos": {
+            "Tortas": 1,
+            "Chilaquiles": 1,
+            "Alambre": 1,
+            "Taquitos": 1,
+            "Refresco": 1
+        },
+        "total": 258.0
+    }
+]
