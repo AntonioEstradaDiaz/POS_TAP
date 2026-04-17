@@ -52,7 +52,9 @@ class GastosView(ft.Container):
             return
 
         # 3. Guardar via DataManager
-        self.dm.registrar_gasto(self.input_concepto.value, self.input_monto.value)
+        #Bug 1 El gasto se guarda como texto en lugar de numero Tipo de error: tipo de dato 
+        #self.dm.registrar_gasto(self.input_concepto.value, self.input_monto.value) Se utiliza el valor del input sin convertirlo a numero, lo que generaba un error al intentar realizar operaciones matematicas.
+        self.dm.registrar_gasto(self.input_concepto.value, monto) # solucion : se convirtio el valor a tipo numerico antes de guardarlo.
 
         # 4. Limpiar formulario
         self.input_concepto.value = ""
@@ -61,8 +63,10 @@ class GastosView(ft.Container):
         self.main_page.snack_bar = ft.SnackBar(
             ft.Text("✅ Gasto registrado exitosamente"), bgcolor=ft.Colors.GREEN_700
         )
+        # Bug 2 self.main_page.snack_bar.open = True  Despues de registras el gasto, la interfaz no se actualizaba correctamente para mostrar el mensaje de confirmacion. Tipo de error: Flujo del Framework
         self.main_page.snack_bar.open = True
-
+        self.main_page.update() # solucion : se agrego una llamada a update() para forzar la actualizacion de la interfaz y mostrar el mensaje de confirmacion. causa: se utilizaba directamente el valor del input sin convertirlo a numero.
+        
     def _build_ui(self):
         formulario = ft.Container(
             bgcolor="#1e293b",
