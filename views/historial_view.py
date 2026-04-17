@@ -29,7 +29,7 @@ class HistorialView(ft.Container):
                     tooltip="Actualizar",
                     # BUG 4: Usa 'lista' en vez de 'self.lista'
                     # Deberia ser: on_click=lambda e: self._cargar_historial()
-                    on_click=lambda e: self._recargar()
+                    on_click=lambda e: self._cargar_historial()
                 )
             ], vertical_alignment="center"),
             ft.Container(height=10),
@@ -54,8 +54,9 @@ class HistorialView(ft.Container):
         """Funcion auxiliar para el boton de refresh."""
         # BUG 4: Aqui se usa una variable local 'lista' que no existe
         # Deberia ser self.lista
-        lista = self.dm.get_historial_hoy()
-        lista.controls.clear()  # Esto va a tronar: 'list' no tiene .controls
+        #lista = self.dm.get_historial_hoy()
+        #lista.controls.clear()  # Esto va a tronar: 'list' no tiene .controls
+        self.lista.controls.clear()
         self._cargar_historial()
 
     def _cargar_historial(self):
@@ -77,9 +78,15 @@ class HistorialView(ft.Container):
 
                 # BUG 3: Muestra el dict crudo en vez de formatearlo
                 # Deberia ser: detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())
-                detalle = str(productos)
-
+                #detalle = str(productos)
+                detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())
                 self.lista.controls.append(
+                    #Formateo de Productos: Se corrigió la visualización del detalle de venta. En lugar de mostrar el diccionario crudo (ej. {'Refresco': 2}), ahora se formatea como una lista legible (ej. 2x Refresco) mediante una unión de cadenas.
+
+#Corrección de Ámbito (Scope): Se arreglaron las referencias a self.lista. Se eliminó el uso de variables locales inexistentes en los métodos de actualización, lo que evitaba que la interfaz se refrescara correctamente.
+#Limpieza de Controles: Se corrigió el error en el método de recarga donde se intentaba acceder a atributos de lista de Python (list) como si fueran controles de Flet. Ahora se utiliza self.lista.controls.clear() de forma adecuada.
+
+#Orden Cronológico: Se implementó reversed(ventas) para que las transacciones más recientes aparezcan al principio de la lista, mejorando la usabilidad del historial.
                     ft.Container(
                         bgcolor="#0f172a" if i % 2 == 0 else "#1e293b",
                         border_radius=8,

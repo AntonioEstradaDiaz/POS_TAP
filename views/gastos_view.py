@@ -52,7 +52,8 @@ class GastosView(ft.Container):
             return
 
         # 3. Guardar via DataManager
-        self.dm.registrar_gasto(self.input_concepto.value, self.input_monto.value)
+        #error 1 self.dm.registrar_gasto(self.input_concepto.value, self.input_monto.value)
+        self.dm.registrar_gasto(self.input_concepto.value, monto)
 
         # 4. Limpiar formulario
         self.input_concepto.value = ""
@@ -61,8 +62,15 @@ class GastosView(ft.Container):
         self.main_page.snack_bar = ft.SnackBar(
             ft.Text("✅ Gasto registrado exitosamente"), bgcolor=ft.Colors.GREEN_700
         )
+        # error 2 self.main_page.snack_bar.open = True
         self.main_page.snack_bar.open = True
+        self.main_page.update()
+        #Se solucionaron errores de lógica y validación en el registro de gastos:
 
+#Corrección de Tipos (Casting): Se corrigió el error int + str. El valor del monto se capturaba como texto; ahora se convierte a float antes de enviarlo al DataManager para permitir cálculos numéricos.
+
+#Validación de Entradas: Se añadió un bloque try-except para detectar si el usuario ingresa letras en lugar de números, evitando que la aplicación se detenga (crash).
+#Flujo de UI: Se aseguró la limpieza de los campos (.value = "") tras un registro exitoso y se corrigió la activación del SnackBar mediante .open = True y page.update() para mostrar las notificaciones correctamente.
     def _build_ui(self):
         formulario = ft.Container(
             bgcolor="#1e293b",

@@ -21,7 +21,8 @@ class DashboardView(ft.Container):
             self._kpi_card("Ventas Hoy",  f"${data['ventas_hoy']:.2f}",  Icons.TRENDING_UP,            "#4ade80"),
             self._kpi_card("Gastos Hoy",  f"${data['gastos_hoy']:.2f}",  Icons.TRENDING_DOWN,           "#f87171"),
             # BUG 1: La ganancia esta calculada al reves (gastos - ventas)
-            self._kpi_card("Ganancia",    f"${data['gastos_hoy'] - data['ventas_hoy']:.2f}",  Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
+            # self._kpi_card("Ganancia",    f"${data['gastos_hoy'] - data['ventas_hoy']:.2f}",  Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
+            self._kpi_card("Ganancia",    f"${data['ventas_hoy'] - data['gastos_hoy']:.2f}",  Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
         ], alignment="spaceEvenly")
 
         # --- Grafico de barras: Top Productos ---
@@ -39,11 +40,16 @@ class DashboardView(ft.Container):
                     ft.Container(
                         # BUG 2: Usa la cantidad directamente como altura, sin escalar
                         # Deberia ser: width=max(4, int((cant / max_cant) * 220))
-                        width=cant,
+                        # width=cant,
+                        width=max(4, int((cant / max_cant) * 220)),
                         height=22,
                         bgcolor="#38bdf8",
                         border_radius=4
                     ),
+                    #Lógica Contable: Se corrigió el cálculo de la Ganancia. Anteriormente restaba ventas de gastos (resultado negativo); ahora aplica la fórmula correcta: ventas_hoy - gastos_hoy.
+
+#Escalado de Gráficos: Se implementó una normalización dinámica para las barras de "Top Productos". En lugar de usar la cantidad como píxeles fijos, ahora se calcula el ancho proporcionalmente al valor máximo, asegurando que las gráficas sean visibles y no se desborden.
+#Consistencia Visual: Se ajustaron los límites mínimos de altura y ancho en los contenedores (max(4, ...)), garantizando que incluso los valores pequeños o en cero mantengan una presencia visual mínima en la interfaz.
                     ft.Text(f" {cant}", size=12, color="#38bdf8"),
                 ], vertical_alignment="center")
                 for prod, cant in top.items()
