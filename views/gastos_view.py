@@ -52,7 +52,7 @@ class GastosView(ft.Container):
             return
 
         # 3. Guardar via DataManager
-        self.dm.registrar_gasto(self.input_concepto.value, self.input_monto.value)
+        self.dm.registrar_gasto(self.input_concepto.value, monto)
 
         # 4. Limpiar formulario
         self.input_concepto.value = ""

@@ -125,10 +125,15 @@ class DataManager:
     # Gastos
     # ------------------------------------------------------------------
     def registrar_gasto(self, concepto, monto):
+        try:
+            monto_float = float(monto)
+        except (ValueError, TypeError):
+            monto_float = 0.0
+
         gasto = {
             "fecha":    datetime.now().strftime("%Y-%m-%d"),
             "concepto": concepto,
-            "monto":    monto
+            "monto":    monto_float
         }
         gastos = self._cargar(self.f_gastos)
         gastos.append(gasto)
@@ -151,7 +156,7 @@ class DataManager:
         for i in range(6, -1, -1):
             dia = hoy - timedelta(days=i)
             fecha_str = dia.strftime("%Y-%m-%d")
-            total_dia = sum(v["total"] for v in ventas if v.get("fecha") == fecha_str)
+            total_dia = sum(float(v.get("total", 0)) for v in ventas if v.get("fecha") == fecha_str)
             resultado.append({"fecha": dia.strftime("%d/%m"), "total": total_dia})
         return resultado
 
@@ -161,8 +166,8 @@ class DataManager:
         gastos = self._cargar(self.f_gastos)
 
         ventas_hoy = [v for v in ventas if v.get("fecha") == fecha_hoy]
-        total_v = sum(v["total"] for v in ventas_hoy)
-        total_g = sum(g["monto"] for g in gastos if g.get("fecha") == fecha_hoy)
+        total_v = sum(float(v.get("total", 0)) for v in ventas_hoy)
+        total_g = sum(float(g.get("monto", 0)) for g in gastos if g.get("fecha") == fecha_hoy)
 
         conteo = {}
         for v in ventas_hoy:
@@ -182,8 +187,8 @@ class DataManager:
         ventas = self._cargar(self.f_ventas)
         gastos = self._cargar(self.f_gastos)
 
-        total_ventas = sum(v["total"] for v in ventas if v.get("fecha") == fecha_hoy)
-        total_gastos = sum(g["monto"] for g in gastos if g.get("fecha") == fecha_hoy)
+        total_ventas = sum(float(v.get("total", 0)) for v in ventas if v.get("fecha") == fecha_hoy)
+        total_gastos = sum(float(g.get("monto", 0)) for g in gastos if g.get("fecha") == fecha_hoy)
         ganancia = total_ventas - total_gastos
 
         resumen = {
