@@ -3,10 +3,6 @@ from flet.controls.material.icons import Icons
 
 
 class DashboardView(ft.Container):
-    """
-    Vista de Dashboard - Muestra KPIs del dia, top productos y historico 7 dias.
-    Requiere recibir page y data_manager desde main.py.
-    """
     def __init__(self, page, data_manager):
         super().__init__(expand=True, padding=30)
         self.dm = data_manager
@@ -18,13 +14,12 @@ class DashboardView(ft.Container):
 
         # --- Tarjetas KPI ---
         kpis = ft.Row([
-            self._kpi_card("Ventas Hoy",  f"${data['ventas_hoy']:.2f}",  Icons.TRENDING_UP,   "#4ade80"),
-            self._kpi_card("Gastos Hoy",  f"${data['gastos_hoy']:.2f}",  Icons.TRENDING_DOWN, "#f87171"),
-            # CORREGIDO: Error de lógica, se estaba calculando gsatos-ventas y debia ser ventas menos gastos
-            self._kpi_card("Ganancia",    f"${data['ventas_hoy'] - data['gastos_hoy']:.2f}",  Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
+            self._kpi_card("Ventas Hoy",  f"${data['ventas_hoy']:.2f}",  Icons.TRENDING_UP,            "green"),
+            self._kpi_card("Gastos Hoy",  f"${data['gastos_hoy']:.2f}",  Icons.TRENDING_DOWN,           "red"),
+            self._kpi_card("Ganancia",    f"${data['ganancia']:.2f}",    Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
         ], alignment="spaceEvenly")
 
-        # --- Grafico de barras: Top Productos ---
+        # --- Gráfico de barras: Top Productos ---
         top = data["top_productos"]
         max_cant = max(top.values(), default=1)
 
@@ -37,8 +32,6 @@ class DashboardView(ft.Container):
                         width=130
                     ),
                     ft.Container(
-                        # BUG 2: Usa la cantidad directamente como altura, sin escalar
-                        # Deberia ser: width=max(4, int((cant / max_cant) * 220))
                         width=max(4, int((cant / max_cant) * 220)),
                         height=22,
                         bgcolor="#38bdf8",
@@ -59,9 +52,9 @@ class DashboardView(ft.Container):
             ])
         )
 
-        # --- Grafico historico: Ultimos 7 dias ---
+        # --- Gráfico de líneas: Histórico 7 días ---
         max_v = max((d["total"] for d in historico), default=1) or 1
-        chart_h = 140
+        chart_h = 140  # altura total del área de barras
 
         puntos = ft.Row(
             spacing=0,
@@ -83,7 +76,7 @@ class DashboardView(ft.Container):
             ]
         )
 
-        panel_historico = ft.Container(
+        panel_lineas = ft.Container(
             expand=1, bgcolor="#1e293b", padding=20, border_radius=10,
             content=ft.Column([
                 ft.Text("Ventas - Últimos 7 Días", size=18, weight="bold", color="white"),
@@ -97,7 +90,7 @@ class DashboardView(ft.Container):
             ft.Container(height=20),
             kpis,
             ft.Container(height=20),
-            ft.Row([panel_barras, ft.Container(width=20), panel_historico], expand=True),
+            ft.Row([panel_barras, ft.Container(width=20), panel_lineas], expand=True),
         ], expand=True)
 
     def _kpi_card(self, titulo, valor, icono, color):

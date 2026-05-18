@@ -29,7 +29,7 @@ class HistorialView(ft.Container):
                     tooltip="Actualizar",
                     # BUG 4: Usa 'lista' en vez de 'self.lista'
                     # Deberia ser: on_click=lambda e: self._cargar_historial()
-                    on_click=lambda e: self._recargar()
+                    on_click=lambda e: self.lista_cargar_historial()
                 )
             ], vertical_alignment="center"),
             ft.Container(height=10),
@@ -54,9 +54,9 @@ class HistorialView(ft.Container):
         """Funcion auxiliar para el boton de refresh."""
         # BUG 4: Aqui se usa una variable local 'lista' que no existe
         # Deberia ser self.lista
-        lista = self.dm.get_historial_hoy()
-        lista.controls.clear()  # Esto va a tronar: 'list' no tiene .controls
-        self._cargar_historial()
+        self.lista = self.dm.get_historial_hoy()
+        self.lista.controls.clear()  # Esto va a tronar: 'list' no tiene .controls
+        self.lista_cargar_historial()
 
     def _cargar_historial(self):
         self.lista.controls.clear()
@@ -77,7 +77,7 @@ class HistorialView(ft.Container):
 
                 # BUG 3: Muestra el dict crudo en vez de formatearlo
                 # Deberia ser: detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())
-                detalle = str(productos)
+                detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())
 
                 self.lista.controls.append(
                     ft.Container(
