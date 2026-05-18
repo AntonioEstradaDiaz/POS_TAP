@@ -2,10 +2,6 @@
 
 Fecha de implementación: 17/05/2026
 
-## Proceso implementado
-
-Se implementaron las mejoras 1, 2 y 3 de `MEJORAS_PROPUESTAS.md` como un solo proceso enfocado en asegurar que la operación diaria del POS mantenga datos consistentes desde la captura hasta el cobro.
-
 ## Alcance funcional
 
 1. **Validaciones reforzadas**
