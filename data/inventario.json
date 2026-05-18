@@ -1,30 +1,26 @@
 {
-    "Tortas": {
-        "precio": 25.0,
+    "Molote Pollo": {
+        "precio": 20,
         "stock": 98
     },
-    "Chilaquiles": {
-        "precio": 75.0,
+    "Molote Queso": {
+        "precio": 20,
         "stock": 99
     },
-    "Burritos": {
-        "precio": 70.0,
+    "Molote Hawaiano": {
+        "precio": 20,
         "stock": 100
     },
-    "Alambre": {
-        "precio": 130.0,
-        "stock": 99
+    "Quesadilla Papa": {
+        "precio": 10,
+        "stock": 86
     },
-    "Taquitos": {
-        "precio": 10.0,
-        "stock": 99
-    },
-    "Agua": {
-        "precio": 15.0,
+    "Quesadilla Pollo": {
+        "precio": 10,
         "stock": 100
     },
-    "Refresco": {
-        "precio": 18.0,
-        "stock": 98
+    "Tostada Sencilla": {
+        "precio": 10,
+        "stock": 92
     }
 }

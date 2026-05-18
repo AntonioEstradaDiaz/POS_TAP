@@ -1,23 +1,43 @@
 [
     {
-        "fecha": "2026-04-16",
-        "hora": "08:00",
+        "fecha": "2026-04-23",
+        "hora": "09:50",
         "productos": {
-            "Tortas": 1,
-            "Refresco": 1
+            "Molote Pollo": 1,
+            "Molote Queso": 1
         },
-        "total": 43.0
+        "total": 40
     },
     {
-        "fecha": "2026-04-16",
-        "hora": "09:28",
+        "fecha": "2026-04-23",
+        "hora": "09:53",
         "productos": {
-            "Tortas": 1,
-            "Chilaquiles": 1,
-            "Alambre": 1,
-            "Taquitos": 1,
-            "Refresco": 1
+            "Molote Pollo": 1
         },
-        "total": 258.0
+        "total": 20
+    },
+    {
+        "fecha": "2026-04-23",
+        "hora": "09:54",
+        "productos": {
+            "Quesadilla Papa": 1
+        },
+        "total": 10
+    },
+    {
+        "fecha": "2026-04-23",
+        "hora": "09:55",
+        "productos": {
+            "Tostada Sencilla": 8
+        },
+        "total": 80
+    },
+    {
+        "fecha": "2026-04-23",
+        "hora": "09:56",
+        "productos": {
+            "Quesadilla Papa": 13
+        },
+        "total": 130
     }
 ]
