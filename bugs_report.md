@@ -110,3 +110,82 @@ total_g = sum(g["monto"] for g in gastos if g.get("fecha") == fecha_hoy)
 ```python
 total_g = sum(float(g.get("monto", 0)) for g in gastos if g.get("fecha") == fecha_hoy)
 ```
+
+---
+
+### BUG 6: Confirmación de Cierre de Día y Feedback de Usuario
+**Archivo:** `views/cierre_dia_view.py` y `core/data_manager.py`
+
+*   **Descripción:** Se requería confirmar que el proceso de cierre de día guardara correctamente los datos en la base de datos SQLite y proporcionar un mejor feedback visual al usuario para evitar clics duplicados.
+*   **Solución:** 
+    1. Se verificó que `DataManager.cerrar_dia()` realiza correctamente el cálculo de totales y utiliza `INSERT OR REPLACE` en la tabla `cierres`.
+    2. Se modificó `CierreDiaView.handle_cerrar_dia` para deshabilitar el botón inmediatamente después del clic y actualizar su texto a "✅ Día Cerrado".
+    3. Se enriqueció el mensaje del `SnackBar` para mostrar el total de ventas consolidadas.
+
+**Código Corregido (`views/cierre_dia_view.py`):**
+```python
+def handle_cerrar_dia(self, e):
+    # Deshabilitar botón para evitar múltiples clics
+    e.control.disabled = True
+    e.control.text = "✅ Día Cerrado"
+    self.page.update()
+
+    resumen, destino = self.dm.cerrar_dia()
+    
+    self.page.snack_bar = ft.SnackBar(
+        ft.Text(f"¡Día cerrado con éxito! Ventas: ${resumen['ventas']:,.2f}. Guardado en {destino}"),
+        bgcolor="#4ade80"
+    )
+    self.page.snack_bar.open = True
+    self.page.update()
+```
+
+---
+
+### BUG 7: Feedback Visual y Animación en Cierre de Día
+**Archivo:** `views/cierre_dia_view.py`
+
+*   **Descripción:** La acción de cierre de día carecía de feedback visual adecuado. El botón se deshabilitaba instantáneamente sin permitir la animación de clic, y el mensaje de éxito no siempre era perceptible.
+*   **Solución:** 
+    1. Se rediseñó el botón con un contenido dinámico (Icono + Texto).
+    2. Se implementó un estado intermedio de "Procesando..." con un `ProgressRing`.
+    3. Se mejoró la visibilidad del `SnackBar` con colores contrastantes e iconos.
+    4. Se cambió el color del botón a verde al finalizar con éxito.
+
+**Código Corregido:**
+```python
+def handle_cerrar_dia(self, e):
+    btn = e.control
+    btn.disabled = True
+    btn.content = ft.Row([
+        ft.ProgressRing(width=20, height=20, color="#0f172a", stroke_width=2),
+        ft.Text(" Procesando...", weight="bold"),
+    ], alignment="center", spacing=10)
+    self.page.update()
+
+    resumen, destino = self.dm.cerrar_dia()
+
+    btn.content = ft.Row([
+        ft.Icon(Icons.CHECK_CIRCLE_OUTLINE, size=20),
+        ft.Text("Día Cerrado", weight="bold"),
+    ], alignment="center", spacing=10)
+    btn.bgcolor = "#4ade80"
+    # ... actualización de SnackBar ...
+```
+
+---
+
+### BUG 8: Alineación de Gráfico de Barras Histórico
+**Archivo:** `views/dashboard_view.py`
+
+*   **Descripción:** Las barras del gráfico "Ventas Últimos 7 Días" no estaban correctamente ancladas a la base, lo que causaba una alineación superior irregular y una expansión visual hacia abajo.
+*   **Solución:** Se forzó la alineación inferior (`MainAxisAlignment.END`) y un alto fijo en las columnas del gráfico para asegurar que todas las barras crezcan hacia arriba desde la misma línea base (la fecha).
+
+**Código Corregido:**
+```python
+ft.Column([
+    ft.Text(f"${d['total']:.0f}", ...),
+    ft.Container(height=max(4, ...), ...),
+    ft.Text(d["fecha"], ...),
+], horizontal_alignment="center", spacing=4, alignment=ft.MainAxisAlignment.END, height=chart_h + 30)
+```

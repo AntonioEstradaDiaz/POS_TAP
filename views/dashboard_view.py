@@ -77,7 +77,7 @@ class DashboardView(ft.Container):
                         border_radius=ft.BorderRadius(top_left=4, top_right=4, bottom_left=0, bottom_right=0),
                     ),
                     ft.Text(d["fecha"], size=9, color="grey", text_align="center"),
-                ], horizontal_alignment="center", spacing=4)
+                ], horizontal_alignment="center", spacing=4, alignment=ft.MainAxisAlignment.END, height=chart_h + 30)
                 for d in historico
             ]
         )
