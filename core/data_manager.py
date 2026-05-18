@@ -22,6 +22,45 @@ class DataManager:
         self.db = Database(self.db_path)
         self._inicializar_inventario()
 
+    @staticmethod
+    def _normalizar_texto(valor) -> str:
+        if valor is None:
+            return ""
+        return str(valor).strip()
+
+    @staticmethod
+    def _normalizar_decimal_positivo(valor):
+        try:
+            numero = float(valor)
+        except (ValueError, TypeError):
+            return None
+        if numero <= 0:
+            return None
+        return numero
+
+    @staticmethod
+    def _normalizar_entero_positivo(valor):
+        try:
+            if isinstance(valor, float) and not valor.is_integer():
+                return None
+            numero = int(valor)
+        except (ValueError, TypeError):
+            return None
+        if numero <= 0:
+            return None
+        return numero
+
+    @staticmethod
+    def _nombre_producto_duplicado(cursor, nombre: str, producto_id_excluido=None) -> bool:
+        cursor.execute("SELECT id, nombre FROM productos")
+        nombre_normalizado = nombre.casefold()
+        for prod_id, nombre_existente in cursor.fetchall():
+            if producto_id_excluido is not None and prod_id == producto_id_excluido:
+                continue
+            if nombre_existente.strip().casefold() == nombre_normalizado:
+                return True
+        return False
+
     # ------------------------------------------------------------------
     # Inventario
     # ------------------------------------------------------------------
@@ -51,7 +90,7 @@ class DataManager:
         inv = {}
         with self.db.get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT nombre, precio, stock FROM productos")
+            cursor.execute("SELECT nombre, precio, stock FROM productos ORDER BY nombre")
             for row in cursor.fetchall():
                 inv[row[0]] = {"precio": row[1], "stock": row[2]}
         return inv
@@ -61,9 +100,17 @@ class DataManager:
         Agrega un nuevo producto al inventario.
         Retorna True si la operacion fue exitosa, o False si el producto ya existia.
         """
+        nombre = self._normalizar_texto(nombre)
+        precio = self._normalizar_decimal_positivo(precio)
+        stock = self._normalizar_entero_positivo(stock)
+        if not nombre or precio is None or stock is None:
+            return False
+
         try:
             with self.db.get_connection() as conn:
                 cursor = conn.cursor()
+                if self._nombre_producto_duplicado(cursor, nombre):
+                    return False
                 cursor.execute(
                     "INSERT INTO productos (nombre, precio, stock) VALUES (?, ?, ?)",
                     (nombre, precio, stock)
@@ -73,8 +120,38 @@ class DataManager:
         except Exception:
             return False
 
+    def editar_producto(self, nombre_actual: str, nuevo_nombre: str, precio: float, stock: int) -> bool:
+        """Actualiza nombre, precio y stock de un producto existente."""
+        nombre_actual = self._normalizar_texto(nombre_actual)
+        nuevo_nombre = self._normalizar_texto(nuevo_nombre)
+        precio = self._normalizar_decimal_positivo(precio)
+        stock = self._normalizar_entero_positivo(stock)
+        if not nombre_actual or not nuevo_nombre or precio is None or stock is None:
+            return False
+
+        with self.db.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id FROM productos WHERE nombre = ?", (nombre_actual,))
+            row = cursor.fetchone()
+            if not row:
+                return False
+
+            prod_id = row[0]
+            if self._nombre_producto_duplicado(cursor, nuevo_nombre, prod_id):
+                return False
+
+            cursor.execute(
+                "UPDATE productos SET nombre = ?, precio = ?, stock = ? WHERE id = ?",
+                (nuevo_nombre, precio, stock, prod_id)
+            )
+            conn.commit()
+            return cursor.rowcount > 0
+
     def eliminar_producto(self, nombre: str) -> bool:
         """Elimina un producto del inventario de forma permanente."""
+        nombre = self._normalizar_texto(nombre)
+        if not nombre:
+            return False
         with self.db.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute("DELETE FROM productos WHERE nombre = ?", (nombre,))
@@ -84,14 +161,49 @@ class DataManager:
     # ------------------------------------------------------------------
     # Ventas
     # ------------------------------------------------------------------
+    def _validar_carrito_stock_con_cursor(self, cursor, carrito: dict):
+        if not carrito:
+            return False, "El carrito esta vacio."
+
+        for prod_nombre, cant in carrito.items():
+            prod_nombre = self._normalizar_texto(prod_nombre)
+            cantidad = self._normalizar_entero_positivo(cant)
+            if not prod_nombre or cantidad is None:
+                return False, "El carrito contiene productos o cantidades invalidas."
+
+            cursor.execute("SELECT stock FROM productos WHERE nombre = ?", (prod_nombre,))
+            row = cursor.fetchone()
+            if not row:
+                return False, f"El producto '{prod_nombre}' ya no existe en el catalogo."
+
+            stock = row[0]
+            if cantidad > stock:
+                return False, f"Stock insuficiente para '{prod_nombre}'. Disponible: {stock}."
+
+        return True, ""
+
+    def validar_carrito_stock(self, carrito: dict):
+        """Valida que todas las cantidades del carrito existan y tengan stock suficiente."""
+        with self.db.get_connection() as conn:
+            cursor = conn.cursor()
+            return self._validar_carrito_stock_con_cursor(cursor, carrito)
+
     def registrar_venta(self, carrito: dict, total: float):
         """Registra una venta con su estampa de tiempo y descuenta el inventario."""
+        total = self._normalizar_decimal_positivo(total)
+        if total is None:
+            return False
+
         ahora = datetime.now()
         fecha = ahora.strftime("%Y-%m-%d")
         hora = ahora.strftime("%H:%M")
         
         with self.db.get_connection() as conn:
             cursor = conn.cursor()
+            stock_valido, _ = self._validar_carrito_stock_con_cursor(cursor, carrito)
+            if not stock_valido:
+                return False
+
             # Registrar venta
             cursor.execute(
                 "INSERT INTO ventas (fecha, hora, total) VALUES (?, ?, ?)",
@@ -101,19 +213,28 @@ class DataManager:
             
             # Registrar detalles y descontar stock
             for prod_nombre, cant in carrito.items():
+                prod_nombre = self._normalizar_texto(prod_nombre)
+                cant = self._normalizar_entero_positivo(cant)
                 cursor.execute("SELECT id, precio FROM productos WHERE nombre = ?", (prod_nombre,))
                 row = cursor.fetchone()
-                if row:
-                    prod_id, precio_u = row
-                    cursor.execute(
-                        "INSERT INTO venta_detalles (venta_id, producto_id, cantidad, precio_unitario) VALUES (?, ?, ?, ?)",
-                        (venta_id, prod_id, cant, precio_u)
-                    )
-                    cursor.execute(
-                        "UPDATE productos SET stock = stock - ? WHERE id = ?",
-                        (cant, prod_id)
-                    )
+                if not row:
+                    conn.rollback()
+                    return False
+
+                prod_id, precio_u = row
+                cursor.execute(
+                    "INSERT INTO venta_detalles (venta_id, producto_id, cantidad, precio_unitario) VALUES (?, ?, ?, ?)",
+                    (venta_id, prod_id, cant, precio_u)
+                )
+                cursor.execute(
+                    "UPDATE productos SET stock = stock - ? WHERE id = ? AND stock >= ?",
+                    (cant, prod_id, cant)
+                )
+                if cursor.rowcount == 0:
+                    conn.rollback()
+                    return False
             conn.commit()
+            return True
 
     def deshacer_ultima_venta(self):
         """Elimina la ultima venta y restaura el stock correspondiente."""
@@ -158,10 +279,10 @@ class DataManager:
     # Gastos
     # ------------------------------------------------------------------
     def registrar_gasto(self, concepto, monto):
-        try:
-            monto_float = float(monto)
-        except (ValueError, TypeError):
-            monto_float = 0.0
+        concepto = self._normalizar_texto(concepto)
+        monto_float = self._normalizar_decimal_positivo(monto)
+        if not concepto or monto_float is None:
+            return False
 
         fecha = datetime.now().strftime("%Y-%m-%d")
         
@@ -172,6 +293,7 @@ class DataManager:
                 (fecha, concepto, monto_float)
             )
             conn.commit()
+            return True
 
     # ------------------------------------------------------------------
     # Historial / KPIs

@@ -32,7 +32,10 @@ class GastosView(ft.Container):
 
     def _guardar_gasto(self, e):
         # 1. Validar campos vacios
-        if not self.input_concepto.value or not self.input_monto.value:
+        concepto = self.input_concepto.value.strip()
+        monto_str = self.input_monto.value.strip()
+
+        if not concepto or not monto_str:
             self.main_page.snack_bar = ft.SnackBar(
                 ft.Text("⚠ Por favor, llena ambos campos"), bgcolor=ft.Colors.ORANGE_800
             )
@@ -42,7 +45,7 @@ class GastosView(ft.Container):
 
         # 2. Validar que el monto sea un numero valido
         try:
-            monto = float(self.input_monto.value)
+            monto = float(monto_str)
         except ValueError:
             self.main_page.snack_bar = ft.SnackBar(
                 ft.Text("⚠ El monto debe ser un número válido"), bgcolor=ft.Colors.RED_700
@@ -51,8 +54,22 @@ class GastosView(ft.Container):
             self.main_page.update()
             return
 
+        if monto <= 0:
+            self.main_page.snack_bar = ft.SnackBar(
+                ft.Text("⚠ El monto debe ser mayor a cero"), bgcolor=ft.Colors.RED_700
+            )
+            self.main_page.snack_bar.open = True
+            self.main_page.update()
+            return
+
         # 3. Guardar via DataManager
-        self.dm.registrar_gasto(self.input_concepto.value, monto)
+        if not self.dm.registrar_gasto(concepto, monto):
+            self.main_page.snack_bar = ft.SnackBar(
+                ft.Text("⚠ No se pudo registrar el gasto. Revisa los datos."), bgcolor=ft.Colors.RED_700
+            )
+            self.main_page.snack_bar.open = True
+            self.main_page.update()
+            return
 
         # 4. Limpiar formulario
         self.input_concepto.value = ""

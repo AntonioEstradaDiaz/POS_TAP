@@ -1,13 +1,19 @@
 import sqlite3
 import os
+from contextlib import contextmanager
 
 class Database:
     def __init__(self, db_path):
         self.db_path = db_path
         self._create_tables()
 
+    @contextmanager
     def get_connection(self):
-        return sqlite3.connect(self.db_path)
+        conn = sqlite3.connect(self.db_path)
+        try:
+            yield conn
+        finally:
+            conn.close()
 
     def _create_tables(self):
         with self.get_connection() as conn:
