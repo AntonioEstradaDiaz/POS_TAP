@@ -1,72 +1,136 @@
 import flet as ft
-from flet.controls.material.icons import Icons
+from data_manager import DataManager
 
-from core.data_manager import DataManager
-from views.ventas_view import VentasView
-from views.gastos_view import GastosView
+# Vistas compartidas
+from views.login_view     import LoginView
+from views.empleado_view  import EmpleadoView
+
+# Vistas solo Admin
+from views.gastos_view    import GastosView
 from views.dashboard_view import DashboardView
 from views.historial_view import HistorialView
-from views.cierre_dia_view import CierreDiaView
+from views.usuarios_view  import UsuariosView
 
 
 def main(page: ft.Page):
-    # 1. Configuracion de la ventana
-    page.title = "POS_TAP - Taller Flet"
-    page.theme_mode = ft.ThemeMode.DARK
-    page.bgcolor = "#0f172a"
-    page.padding = 0
+    page.title            = "POS TAP"
+    page.theme_mode       = ft.ThemeMode.DARK
+    page.bgcolor          = "#0f172a"
+    page.padding          = 0
+    page.window_width     = 1050
+    page.window_height    = 720
+    page.window_resizable = True
 
-    # 2. Instanciar el cerebro de datos (unico para toda la app)
     dm = DataManager()
 
-    # 3. Contenedor dinamico donde se inyectan las vistas
-    content_area = ft.Container(expand=True, bgcolor="#0f172a")
+    # ------------------------------------------------------------------
+    # Helpers de navegación
+    # ------------------------------------------------------------------
 
-    # 4. Logica de navegacion
-    def change_route(e):
-        idx = e.control.selected_index
-        content_area.content = None
-        if idx == 0:
-            content_area.content = VentasView(page, dm)   # Dia 1: Funcional
-        elif idx == 1:
-            content_area.content = GastosView(page, dm)   # Dia 1: Funcional
-        elif idx == 2:
-            content_area.content = DashboardView(page, dm)   # Dia 2: Funcional
-        elif idx == 3:
-            content_area.content = HistorialView(page, dm)    # Dia 2: Funcional
-        elif idx == 4:
-            content_area.content = CierreDiaView()         # Dia 3: Pendiente
+    def cambiar_vista(vista):
+        page.controls.clear()
+        page.controls.append(vista)
         page.update()
 
-    # 5. Barra lateral de navegacion
-    sidebar = ft.NavigationRail(
-        selected_index=0,
-        label_type=ft.NavigationRailLabelType.ALL,
-        min_width=100,
-        bgcolor="#1e293b",
-        on_change=change_route,
-        destinations=[
-            ft.NavigationRailDestination(icon=Icons.SHOPPING_CART, label="Ventas"),
-            ft.NavigationRailDestination(icon=Icons.PAYMENT,       label="Gastos"),
-            ft.NavigationRailDestination(icon=Icons.ANALYTICS,     label="Dashboard"),
-            ft.NavigationRailDestination(icon=Icons.HISTORY,       label="Historial"),
-            ft.NavigationRailDestination(icon=Icons.NIGHTLIGHT,    label="Cerrar Dia"),
-        ]
-    )
+    def ir_login():
+        cambiar_vista(LoginView(page, dm, on_login=on_login))
 
-    # 6. Vista inicial (Ventas - Dia 1)
-    content_area.content = VentasView(page, dm)
+    # ------------------------------------------------------------------
+    # Callback de login: redirige según rol
+    # ------------------------------------------------------------------
 
-    # 7. Ensamblar la interfaz
-    page.add(
-        ft.Row([
-            sidebar,
+    def on_login(usuario: dict):
+        """Recibe {'id', 'usuario', 'rol'} y carga la vista correcta."""
+        if usuario["rol"] == "admin":
+            cambiar_vista(_panel_admin(usuario))
+        else:
+            cambiar_vista(EmpleadoView(page, dm, usuario, on_logout=ir_login))
+
+    # ------------------------------------------------------------------
+    # Panel Admin
+    # ------------------------------------------------------------------
+
+    def _panel_admin(usuario: dict) -> ft.Row:
+        area = ft.Container(expand=True)
+
+        vistas = {
+            0: lambda: EmpleadoView(page, dm, usuario, on_logout=ir_login),
+            1: lambda: GastosView(page, dm),
+            2: lambda: DashboardView(page, dm),
+            3: lambda: HistorialView(page, dm),
+            4: lambda: UsuariosView(page, dm),
+        }
+
+        def cambiar(index):
+            area.content = vistas[index]()
+            try:
+                area.update()
+            except Exception:
+                pass
+
+        rail = ft.NavigationRail(
+            selected_index=2,
+            label_type=ft.NavigationRailLabelType.ALL,
+            bgcolor="#1e293b",
+            indicator_color="#38bdf8",
+            min_width=100,
+            destinations=[
+                ft.NavigationRailDestination(
+                    icon=ft.Icons.POINT_OF_SALE_OUTLINED,
+                    selected_icon=ft.Icons.POINT_OF_SALE,
+                    label="Ventas",
+                ),
+                ft.NavigationRailDestination(
+                    icon=ft.Icons.ATTACH_MONEY_OUTLINED,
+                    selected_icon=ft.Icons.ATTACH_MONEY,
+                    label="Gastos",
+                ),
+                ft.NavigationRailDestination(
+                    icon=ft.Icons.DASHBOARD_OUTLINED,
+                    selected_icon=ft.Icons.DASHBOARD,
+                    label="Dashboard",
+                ),
+                ft.NavigationRailDestination(
+                    icon=ft.Icons.HISTORY_OUTLINED,
+                    selected_icon=ft.Icons.HISTORY,
+                    label="Historial",
+                ),
+                ft.NavigationRailDestination(
+                    icon=ft.Icons.MANAGE_ACCOUNTS_OUTLINED,
+                    selected_icon=ft.Icons.MANAGE_ACCOUNTS,
+                    label="Usuarios",
+                ),
+            ],
+            on_change=lambda e: cambiar(e.control.selected_index),
+            leading=ft.Column([
+                ft.Container(height=8),
+                ft.Icon(ft.Icons.ADMIN_PANEL_SETTINGS,
+                        color="#38bdf8", size=28),
+                ft.Text(usuario["usuario"], size=11,
+                        color="#64748b", text_align="center"),  
+                ft.Container(height=4),
+            ]),
+            trailing=ft.IconButton(
+                ft.Icons.LOGOUT,
+                icon_color="#f87171",
+                tooltip="Cerrar sesión",
+                on_click=lambda e: ir_login()
+            ),
+        )
+
+        # Cargar Dashboard al entrar (directo, sin update)
+        area.content = DashboardView(page, dm)
+
+        return ft.Row([
+            rail,
             ft.VerticalDivider(width=1, color="#334155"),
-            content_area
+            area,
         ], expand=True)
-    )
-    page.update()
+
+    # ------------------------------------------------------------------
+    # Arrancar en el login
+    # ------------------------------------------------------------------
+    ir_login()
 
 
-if __name__ == "__main__":
-    ft.run(main)
+ft.app(target=main)
