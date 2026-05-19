@@ -1,26 +1,24 @@
 {
-    "Mole Poblano": {
-        "precio": 45,
-        "stock": 100
+    "Tortilla española": {
+        "precio": 5.0,
+        "stock": 97
     },
-    "Enchiladas Verdes": {
-        "precio": 35,
-        "stock": 100
+    "Paella": {
+        "precio": 250.0,
+        "stock": 95
     },
-    "Chilaquiles Rojos": {
-        "precio": 30,
-        "stock": 100
+    "Caracoles": {
+        "precio": 50.0,
+        "stock": 98
     },
-    "Pozole Rojo": {
-        "precio": 50,
-        "stock": 100
+    "coca-cola": {
+        "precio": 20.0,
+        "stock": 97,
+        "categoria": "bebida"
     },
-    "Chiles Rellenos": {
-        "precio": 40,
-        "stock": 100
-    },
-    "Tlayuda Oaxaquena": {
-        "precio": 55,
-        "stock": 100
+    "flan": {
+        "precio": 50.0,
+        "stock": 100,
+        "categoria": "postre"
     }
 }

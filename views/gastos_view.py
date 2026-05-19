@@ -1,5 +1,4 @@
 import flet as ft
-from flet.controls.material.icons import Icons
 
 
 class GastosView(ft.Container):
@@ -11,7 +10,6 @@ class GastosView(ft.Container):
         self.main_page = page
         self.dm        = data_manager
 
-        # Inputs con estilo moderno
         self.input_concepto = ft.TextField(
             label="Concepto del gasto",
             hint_text="Ej: Compra de ingredientes",
@@ -31,7 +29,6 @@ class GastosView(ft.Container):
         self.content = self._build_ui()
 
     def _guardar_gasto(self, e):
-        # 1. Validar campos vacios
         if not self.input_concepto.value or not self.input_monto.value:
             self.main_page.snack_bar = ft.SnackBar(
                 ft.Text("⚠ Por favor, llena ambos campos"), bgcolor=ft.Colors.ORANGE_800
@@ -40,7 +37,6 @@ class GastosView(ft.Container):
             self.main_page.update()
             return
 
-        # 2. Validar que el monto sea un numero valido
         try:
             monto = float(self.input_monto.value)
         except ValueError:
@@ -51,10 +47,9 @@ class GastosView(ft.Container):
             self.main_page.update()
             return
 
-        # 3. Guardar via DataManager
-        self.dm.registrar_gasto(self.input_concepto.value, self.input_monto.value)
+        # Bug 3 corregido: se pasa `monto` (float) en lugar del string original
+        self.dm.registrar_gasto(self.input_concepto.value, monto)
 
-        # 4. Limpiar formulario
         self.input_concepto.value = ""
         self.input_monto.value    = ""
 
@@ -77,7 +72,7 @@ class GastosView(ft.Container):
                 ft.Container(height=24),
                 ft.ElevatedButton(
                     "GUARDAR GASTO",
-                    icon=Icons.SAVE,
+                    icon=ft.Icons.SAVE,
                     bgcolor="#38bdf8",
                     color="#0f172a",
                     height=50,
@@ -85,7 +80,7 @@ class GastosView(ft.Container):
                     on_click=self._guardar_gasto,
                     style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8))
                 ),
-            ], horizontal_alignment="center")
+            ], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
         )
 
         return ft.Column([

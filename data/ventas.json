@@ -1,1 +1,13 @@
-[]
+[
+    {
+        "fecha": "2026-05-16",
+        "hora": "00:46",
+        "productos": {
+            "Tortilla española": 1,
+            "coca-cola": 1,
+            "Caracoles": 1,
+            "Paella": 1
+        },
+        "total": 325.0
+    }
+]

@@ -1,5 +1,4 @@
 import flet as ft
-from flet.controls.material.icons import Icons
 
 
 class DashboardView(ft.Container):
@@ -18,10 +17,10 @@ class DashboardView(ft.Container):
 
         # --- Tarjetas KPI ---
         kpis = ft.Row([
-            self._kpi_card("Ventas Hoy",  f"${data['ventas_hoy']:.2f}",  Icons.TRENDING_UP,            "#4ade80"),
-            self._kpi_card("Gastos Hoy",  f"${data['gastos_hoy']:.2f}",  Icons.TRENDING_DOWN,           "#f87171"),
-            # BUG 1: La ganancia esta calculada al reves (gastos - ventas)
-            self._kpi_card("Ganancia",    f"${data['gastos_hoy'] - data['ventas_hoy']:.2f}",  Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
+            self._kpi_card("Ventas Hoy",  f"${data['ventas_hoy']:.2f}",  ft.Icons.TRENDING_UP,            "#4ade80"),
+            self._kpi_card("Gastos Hoy",  f"${data['gastos_hoy']:.2f}",  ft.Icons.TRENDING_DOWN,           "#f87171"),
+            # Bug 1 corregido: ventas - gastos
+            self._kpi_card("Ganancia",    f"${data['ventas_hoy'] - data['gastos_hoy']:.2f}",  ft.Icons.ACCOUNT_BALANCE_WALLET,  "#38bdf8"),
         ], alignment="spaceEvenly")
 
         # --- Grafico de barras: Top Productos ---
@@ -37,9 +36,8 @@ class DashboardView(ft.Container):
                         width=130
                     ),
                     ft.Container(
-                        # BUG 2: Usa la cantidad directamente como altura, sin escalar
-                        # Deberia ser: width=max(4, int((cant / max_cant) * 220))
-                        width=cant,
+                        # Bug 2 corregido: ancho escalado proporcionalmente
+                        width=max(4, int((cant / max_cant) * 220)),
                         height=22,
                         bgcolor="#38bdf8",
                         border_radius=4
@@ -78,7 +76,7 @@ class DashboardView(ft.Container):
                         border_radius=ft.BorderRadius(top_left=4, top_right=4, bottom_left=0, bottom_right=0),
                     ),
                     ft.Text(d["fecha"], size=9, color="grey", text_align="center"),
-                ], horizontal_alignment="center", spacing=4)
+                ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=4)
                 for d in historico
             ]
         )
