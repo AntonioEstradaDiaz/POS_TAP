@@ -1,1 +1,43 @@
-[]
+[
+    {
+        "fecha": "2026-04-16",
+        "hora": "17:00",
+        "productos": {
+            "Mole Poblano": 2
+        },
+        "total": 90
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "19:07",
+        "productos": {
+            "Chiles Rellenos": 6
+        },
+        "total": 240
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "19:07",
+        "productos": {
+            "Chiles Rellenos": 12,
+            "Pozole Rojo": 7
+        },
+        "total": 830
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "20:18",
+        "productos": {
+            "Chilaquiles Rojos": 6
+        },
+        "total": 180
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "20:18",
+        "productos": {
+            "Pozole Rojo": 1
+        },
+        "total": 50
+    }
+]
