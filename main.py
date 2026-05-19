@@ -13,7 +13,7 @@ def main(page: ft.Page):
     # 1. Configuracion de la ventana
     page.title = "POS_TAP - Taller Flet"
     page.theme_mode = ft.ThemeMode.DARK
-    page.bgcolor = "#0f172a"
+    page.bgcolor = "#2600ff"
     page.padding = 0
 
     # 2. Instanciar el cerebro de datos (unico para toda la app)
@@ -61,7 +61,7 @@ def main(page: ft.Page):
     page.add(
         ft.Row([
             sidebar,
-            ft.VerticalDivider(width=1, color="#334155"),
+            ft.VerticalDivider(width=1, color="#D400FF"),
             content_area
         ], expand=True)
     )
