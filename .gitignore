@@ -1,42 +1,11 @@
-# Python
 __pycache__/
-*.py[cod]
-*$py.class
+*.pyc
 *.pyo
 *.pyd
 .Python
 env/
+.env
 venv/
 .venv/
-ENV/
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Virtual environments
-.env
-.venv
-env/
-venv/
-
-# Distribution / packaging
-dist/
-build/
-*.egg-info/
-*.egg
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Flet
-*.flet/
-assets/uploads/
-
-# Logs
-*.log
+data/*.json
+data/cierres/

@@ -1,26 +1,26 @@
 {
-    "Mole Poblano": {
-        "precio": 45,
+    "Molote Pollo": {
+        "precio": 20,
+        "stock": 98
+    },
+    "Molote Queso": {
+        "precio": 20,
+        "stock": 99
+    },
+    "Molote Hawaiano": {
+        "precio": 20,
         "stock": 100
     },
-    "Enchiladas Verdes": {
-        "precio": 35,
+    "Quesadilla Papa": {
+        "precio": 10,
+        "stock": 86
+    },
+    "Quesadilla Pollo": {
+        "precio": 10,
         "stock": 100
     },
-    "Chilaquiles Rojos": {
-        "precio": 30,
-        "stock": 100
-    },
-    "Pozole Rojo": {
-        "precio": 50,
-        "stock": 100
-    },
-    "Chiles Rellenos": {
-        "precio": 40,
-        "stock": 100
-    },
-    "Tlayuda Oaxaquena": {
-        "precio": 55,
-        "stock": 100
+    "Tostada Sencilla": {
+        "precio": 10,
+        "stock": 92
     }
 }

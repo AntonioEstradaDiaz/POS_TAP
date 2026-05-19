@@ -1,1 +1,32 @@
-[]
+[
+    {
+        "fecha": "2026-04-15",
+        "concepto": "Agua",
+        "monto": 100.0
+    },
+    {
+        "fecha": "2026-04-16",
+        "concepto": "gtsh",
+        "monto": 3222.0
+    },
+    {
+        "fecha": "2026-04-16",
+        "concepto": "ethrrdth",
+        "monto": 35222.0
+    },
+    {
+        "fecha": "2026-04-16",
+        "concepto": "Comida",
+        "monto": 120.0
+    },
+    {
+        "fecha": "2026-04-16",
+        "concepto": "Comida",
+        "monto": 150.0
+    },
+    {
+        "fecha": "2026-04-16",
+        "concepto": "nfbefb",
+        "monto": 12.0
+    }
+]

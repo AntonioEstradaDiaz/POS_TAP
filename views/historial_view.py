@@ -3,10 +3,6 @@ from flet.controls.material.icons import Icons
 
 
 class HistorialView(ft.Container):
-    """
-    Vista de Historial - Muestra las ventas realizadas hoy.
-    Requiere recibir page y data_manager desde main.py.
-    """
     def __init__(self, page, data_manager):
         super().__init__(expand=True, padding=30)
         self.main_page = page
@@ -27,9 +23,7 @@ class HistorialView(ft.Container):
                     icon=Icons.REFRESH,
                     icon_color="#38bdf8",
                     tooltip="Actualizar",
-                    # BUG 4: Usa 'lista' en vez de 'self.lista'
-                    # Deberia ser: on_click=lambda e: self._cargar_historial()
-                    on_click=lambda e: self._recargar()
+                    on_click=lambda e: self._cargar_historial()
                 )
             ], vertical_alignment="center"),
             ft.Container(height=10),
@@ -50,14 +44,6 @@ class HistorialView(ft.Container):
             ),
         ], expand=True)
 
-    def _recargar(self):
-        """Funcion auxiliar para el boton de refresh."""
-        # BUG 4: Aqui se usa una variable local 'lista' que no existe
-        # Deberia ser self.lista
-        lista = self.dm.get_historial_hoy()
-        lista.controls.clear()  # Esto va a tronar: 'list' no tiene .controls
-        self._cargar_historial()
-
     def _cargar_historial(self):
         self.lista.controls.clear()
         ventas = self.dm.get_historial_hoy()
@@ -74,10 +60,7 @@ class HistorialView(ft.Container):
                 hora = v.get("hora", "--:--")
                 total = v.get("total", 0)
                 productos = v.get("productos", {})
-
-                # BUG 3: Muestra el dict crudo en vez de formatearlo
-                # Deberia ser: detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())
-                detalle = str(productos)
+                detalle = ", ".join(f"{c}x {p}" for p, c in productos.items())
 
                 self.lista.controls.append(
                     ft.Container(

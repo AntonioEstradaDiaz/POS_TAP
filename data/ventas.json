@@ -1,1 +1,43 @@
-[]
+[
+    {
+        "fecha": "2026-04-23",
+        "hora": "09:50",
+        "productos": {
+            "Molote Pollo": 1,
+            "Molote Queso": 1
+        },
+        "total": 40
+    },
+    {
+        "fecha": "2026-04-23",
+        "hora": "09:53",
+        "productos": {
+            "Molote Pollo": 1
+        },
+        "total": 20
+    },
+    {
+        "fecha": "2026-04-23",
+        "hora": "09:54",
+        "productos": {
+            "Quesadilla Papa": 1
+        },
+        "total": 10
+    },
+    {
+        "fecha": "2026-04-23",
+        "hora": "09:55",
+        "productos": {
+            "Tostada Sencilla": 8
+        },
+        "total": 80
+    },
+    {
+        "fecha": "2026-04-23",
+        "hora": "09:56",
+        "productos": {
+            "Quesadilla Papa": 13
+        },
+        "total": 130
+    }
+]
