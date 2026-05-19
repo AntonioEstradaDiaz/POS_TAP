@@ -1,1 +1,70 @@
-[]
+[
+    {
+        "fecha": "2026-04-16",
+        "concepto": "Tostadas",
+        "monto": 150.0,
+        "topico": "Ingredientes"
+    },
+    {
+        "fecha": "2026-04-16",
+        "concepto": "Pollo",
+        "monto": 500.0,
+        "topico": "Ingredientes"
+    },
+    {
+        "id": "0f152233b1e04e3ab97d2f140e29019e",
+        "fecha": "2026-04-21",
+        "concepto": "Comandante Toño",
+        "monto": 6767.0,
+        "topico": "Sueldos"
+    },
+    {
+        "id": "82505a8af23a4b86bc2d1cc6aed28fcb",
+        "fecha": "2026-04-21",
+        "concepto": "Tostadas",
+        "monto": 67.0,
+        "topico": "Ingredientes"
+    },
+    {
+        "id": "2f3f285841c540ac88a00a1680aadd49",
+        "fecha": "2026-04-21",
+        "concepto": "10 garrafones de agua",
+        "monto": 800.0,
+        "topico": "Insumos"
+    },
+    {
+        "id": "e834495cca4646d79a38f80105a7e31d",
+        "fecha": "2026-04-23",
+        "concepto": "Renta",
+        "monto": 12000.0,
+        "topico": "Renta Local"
+    },
+    {
+        "id": "8aa4ece1acd149319ae6d7dbb7344ab9",
+        "fecha": "2026-04-23",
+        "concepto": "Agua",
+        "monto": 300.0,
+        "topico": "Renta Local"
+    },
+    {
+        "id": "1222a5c7b5f844eebcc3481688d3aa03",
+        "fecha": "2026-04-23",
+        "concepto": "Recibo Luz",
+        "monto": 500.0,
+        "topico": "Renta Local"
+    },
+    {
+        "id": "6877374ed0bc47359fc451ee5570869c",
+        "fecha": "2026-04-23",
+        "concepto": "Paquete de Servilletas",
+        "monto": 250.0,
+        "topico": "Insumos"
+    },
+    {
+        "id": "70df5e6d8df44fdfb29be478be5ea442",
+        "fecha": "2026-04-23",
+        "concepto": "Kilos de Pollo",
+        "monto": 500.0,
+        "topico": "Ingredientes"
+    }
+]

@@ -1,1 +1,24 @@
-[]
+[
+    {
+        "fecha": "2026-04-16",
+        "hora": "18:54",
+        "productos": {
+            "Tlayuda Oaxaquena": 3,
+            "Chiles Rellenos": 1
+        },
+        "total": 205
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "19:54",
+        "productos": {
+            "Mole Poblano": 4,
+            "Tlayuda Oaxaquena": 3,
+            "Chiles Rellenos": 3,
+            "Enchiladas Verdes": 4,
+            "Chilaquiles Rojos": 4,
+            "Pozole Rojo": 5
+        },
+        "total": 975
+    }
+]

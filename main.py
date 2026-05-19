@@ -3,9 +3,9 @@ from flet.controls.material.icons import Icons
 
 from core.data_manager import DataManager
 from views.ventas_view import VentasView
-from views.gastos_view import GastosView
-from views.dashboard_view import DashboardView
-from views.historial_view import HistorialView
+from views.gastos_viewBug import GastosView
+from views.dashboard_viewBug import DashboardView
+from views.historial_viewBug import HistorialView
 from views.cierre_dia_view import CierreDiaView
 
 
