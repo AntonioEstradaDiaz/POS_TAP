@@ -1,1 +1,27 @@
-[]
+[
+    {
+        "fecha": "2026-04-15",
+        "concepto": "luz",
+        "monto": 250.0
+    },
+    {
+        "fecha": "2026-04-15",
+        "concepto": "luz ",
+        "monto": 120.0
+    },
+    {
+        "fecha": "2026-04-15",
+        "concepto": "gas",
+        "monto": 130.0
+    },
+    {
+        "fecha": "2026-04-16",
+        "concepto": "luz",
+        "monto": 150.0
+    },
+    {
+        "fecha": "2026-04-16",
+        "concepto": "gas",
+        "monto": 130.0
+    }
+]

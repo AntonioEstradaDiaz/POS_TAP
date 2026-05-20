@@ -1,0 +1,174 @@
+## 5.5 Explicación del Dashboard y Resultados
+
+**Dashboard & Analíticas** del sistema POS desarrollado en Flet. Este panel fue diseñado para ofrecer información visual y estadística en tiempo real sobre las ventas, gastos y ganancias del negocio.
+
+
+### Indicadores KPI superiores
+
+En la parte superior se encuentran tres tarjetas KPI (*Key Performance Indicators*), las cuales muestran un resumen rápido de la actividad del día:
+
+* **Ventas Hoy:** total de ingresos generados por ventas realizadas.
+* **Gastos Hoy:** suma de gastos operativos registrados.
+* **Ganancia:** utilidad neta calculada restando costos y gastos a las ventas.
+
+Estos indicadores cuentan con animaciones optimizadas y actualización dinámica en tiempo real.
+
+---
+
+### Tabla “Top Productos - Estadísticas”
+
+La sección izquierda muestra los productos más vendidos del día mediante una tabla optimizada con `ft.DataTable`.
+
+La tabla incluye:
+
+* **Platillo:** nombre del producto con medallas para los primeros lugares.
+* **Cant.:** cantidad vendida.
+* **Precio:** precio de venta unitario.
+* **Costo:** costo de ingredientes del platillo.
+* **Ganancia Neta:** utilidad real generada por cada producto.
+
+Ejemplo observado:
+
+* *Enchiladas Verdes* vendió 3 unidades.
+* Precio de venta: $35.
+* Costo de ingredientes: $17.
+* Ganancia neta obtenida: $54.
+
+El cálculo utilizado es:
+
+Ganancia= Precio - Costo\Cantidad
+
+Este cambio corrigió el error inicial donde únicamente se calculaban ingresos brutos y no ganancias reales.
+
+---
+
+### Gráfica “Ventas - Últimos 7 Días”
+
+En la parte derecha se observa un gráfico de barras que representa el historial de ventas de la última semana.
+
+Características:
+
+* Cada barra representa las ventas de un día.
+* Los valores se muestran encima de cada barra.
+* Permite identificar tendencias, días con mayores ingresos y periodos sin ventas.
+
+Por ejemplo:
+
+* El día **17/05** registró el mayor ingreso con **$1325**.
+* El día **19/05** registró **$285**.
+* Algunos días aparecen en $0 debido a ausencia de ventas registradas.
+
+---
+
+## 4. Mejoras Aplicadas
+
+### 4.1 Optimización de carga inicial
+
+Se reemplazó el uso de `threading.Thread` y `time.sleep()` por el método `did_mount()` de Flet, permitiendo que la interfaz cargue exactamente cuando el control ya está montado y evitando retrasos innecesarios.
+
+### 4.2 Implementación de Skeleton Screens
+
+Se añadieron pantallas de carga tipo *skeleton* para mejorar la experiencia visual mientras se obtienen los datos.
+Se implementaron:
+
+* Skeleton para la tabla de productos.
+* Skeleton para el gráfico histórico.
+* Indicadores KPI temporales con el carácter “-”.
+
+### 4.3 Carga paralela de datos
+
+Las consultas a la base de datos dejaron de ejecutarse de forma secuencial y ahora trabajan en paralelo mediante *threads*, reduciendo significativamente el tiempo total de carga.
+
+### 4.4 Optimización de la tabla con DataTable
+
+La tabla de productos fue rediseñada usando `ft.DataTable`, reduciendo la cantidad de controles generados y mejorando el rendimiento del renderizado en Flet.
+
+### 4.5 Optimización de animaciones
+
+Se reemplazaron múltiples hilos independientes por un único ciclo de animación que actualiza todos los indicadores y gráficos en una sola llamada a `page.update()`, disminuyendo bloqueos y consumo de recursos.
+
+### 4.6 Sistema de caché
+
+Se implementó un sistema de caché en memoria para conservar los datos entre navegaciones:
+
+* Primera carga: muestra skeleton y anima datos.
+* Siguientes cargas: muestra información instantáneamente desde caché.
+* Actualización silenciosa en segundo plano.
+
+---
+
+# 5. Cálculo de Ganancia Neta Real
+
+### 5.1 Modificaciones en la base de datos
+
+Se agregó la columna `costo` en la tabla de productos para almacenar el costo de ingredientes de cada platillo.
+Además, se implementó una migración automática usando `ALTER TABLE` para actualizar bases de datos antiguas.
+
+### 5.2 Nueva fórmula de ganancia
+
+El sistema fue corregido para calcular la ganancia neta real:
+
+\text{Ganancia Neta} = \text{Ventas Totales} - \text{Costo de Ingredientes} - \text{Gastos Operativos}
+
+Por producto:
+
+\text{Ganancia por Platillo} = (\text{Precio} - \text{Costo}) \times \text{Cantidad Vendida}
+
+### 5.3 Actualización del dashboard
+
+La tabla de “Top Productos” ahora incluye:
+
+* Nombre del platillo.
+* Cantidad vendida.
+* Precio de venta.
+* Costo de ingredientes.
+* Ganancia neta real.
+
+Esto permitió mostrar información financiera más precisa y útil para la toma de decisiones.
+## 5.4 Corrección de Costos en Base de Datos Existente
+
+Durante la implementación del cálculo de ganancia neta se detectó un problema relacionado con la migración de la base de datos existente.
+
+La base de datos `pos.db` ya contenía productos registrados antes de agregar la columna `costo`.
+Cuando se ejecutó la instrucción:
+
+```sql
+ALTER TABLE productos ADD COLUMN costo REAL DEFAULT 0
+```
+
+la nueva columna fue creada correctamente, pero todos los registros anteriores quedaron con valor `0`.
+
+Como consecuencia:
+
+* El sistema seguía calculando la ganancia como:
+
+\text{Ganancia} = \text{Precio} \times \text{Cantidad}
+
+* Es decir, continuaba mostrando ingresos brutos en lugar de ganancia neta real.
+
+---
+
+### Solución aplicada
+
+Se creó el script `fix_costos.py`, utilizado una sola vez para actualizar manualmente los costos reales de los productos ya existentes dentro de la base de datos.
+
+Después de ejecutar el script:
+
+* Cada producto obtuvo su costo correcto.
+* El dashboard comenzó a calcular la utilidad neta real correctamente.
+
+La fórmula final quedó:
+
+\text{Ganancia Neta} = (\text{Precio} - \text{Costo}) \times \text{Cantidad}
+
+---
+
+### Resultado final
+
+Actualmente:
+
+* Los productos antiguos ya tienen costos corregidos.
+* Los nuevos productos registrados desde la aplicación guardan automáticamente el costo mediante el método `agregar_producto()`.
+* El script `fix_costos.py` ya no es necesario después de la corrección inicial.
+
+### nota: tarda un poco en cargar a veces tienes cambiar de ventana paa que se actualize. 
