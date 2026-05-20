@@ -1,0 +1,39 @@
+[
+    {
+        "fecha": "2026-04-16",
+        "hora": "13:26",
+        "productos": {
+            "Pozole Rojo": 1,
+            "Pasta penne al burro": 1,
+            "Agua de infusión": 2
+        },
+        "total": 170.0
+    },
+    {
+        "fecha": "2026-04-16",
+        "hora": "13:27",
+        "productos": {
+            "Enchiladas Verdes": 1,
+            "Coca-cola": 1
+        },
+        "total": 60.0
+    },
+    {
+        "fecha": "2026-04-23",
+        "hora": "22:26",
+        "productos": {
+            "Pozole Rojo": 1,
+            "Agua de infusión": 1
+        },
+        "total": 80.0
+    },
+    {
+        "fecha": "2026-04-24",
+        "hora": "09:21",
+        "productos": {
+            "Mole Poblano": 1,
+            "Coca-cola": 1
+        },
+        "total": 70.0
+    }
+]

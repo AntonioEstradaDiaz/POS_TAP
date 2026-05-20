@@ -1,0 +1,34 @@
+{
+    "Mole Poblano": {
+        "precio": 45,
+        "stock": 99
+    },
+    "Enchiladas Verdes": {
+        "precio": 35,
+        "stock": 99
+    },
+    "Chilaquiles Rojos": {
+        "precio": 30,
+        "stock": 100
+    },
+    "Pozole Rojo": {
+        "precio": 50,
+        "stock": 98
+    },
+    "Chiles Rellenos": {
+        "precio": 40,
+        "stock": 100
+    },
+    "Tlayuda Oaxaquena": {
+        "precio": 55,
+        "stock": 100
+    },
+    "Agua de infusión": {
+        "precio": 30.0,
+        "stock": 97
+    },
+    "Coca-cola": {
+        "precio": 25.0,
+        "stock": 98
+    }
+}

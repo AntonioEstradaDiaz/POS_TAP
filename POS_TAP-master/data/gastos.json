@@ -1,0 +1,12 @@
+[
+    {
+        "fecha": "2026-04-24",
+        "concepto": "materia prima",
+        "monto": 300.0
+    },
+    {
+        "fecha": "2026-04-24",
+        "concepto": "Gas",
+        "monto": 333.0
+    }
+]
