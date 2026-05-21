@@ -1,1 +1,14 @@
-[]
+[
+    {
+        "fecha": "2026-04-23",
+        "hora": "19:22",
+        "productos": {
+            "Mole Poblano": 1,
+            "Enchiladas Verdes": 1,
+            "Chiles Rellenos": 1,
+            "Pozole Rojo": 1,
+            "Tlayuda Oaxaquena": 1
+        },
+        "total": 225
+    }
+]
