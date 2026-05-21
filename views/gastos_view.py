@@ -16,7 +16,7 @@ class GastosView(ft.Container):
             label="Concepto del gasto",
             hint_text="Ej: Compra de ingredientes",
             text_size=16,
-            border_color="#38bdf8",
+            bgcolor=ft.Colors.SURFACE,
             width=400,
         )
         self.input_monto = ft.TextField(
@@ -24,7 +24,7 @@ class GastosView(ft.Container):
             hint_text="Ej: 150.00",
             text_size=16,
             keyboard_type=ft.KeyboardType.NUMBER,
-            border_color="#38bdf8",
+            bgcolor=ft.Colors.SURFACE,
             width=400,
         )
 
@@ -40,20 +40,16 @@ class GastosView(ft.Container):
             self.main_page.update()
             return
 
-        # 2. Validar que el monto sea un numero valido
+       # 2. Validar que el monto sea un numero valido
         try:
-            monto = float(self.input_monto.value)
+            monto = float(self.input_monto.value) # <--- Aquí creaste la variable correcta
         except ValueError:
-            self.main_page.snack_bar = ft.SnackBar(
-                ft.Text("⚠ El monto debe ser un número válido"), bgcolor=ft.Colors.RED_700
-            )
-            self.main_page.snack_bar.open = True
-            self.main_page.update()
+            # ... manejo de error ...
             return
 
-        # 3. Guardar via DataManager
-        self.dm.registrar_gasto(self.input_concepto.value, self.input_monto.value)
-
+        # 3. Guardar via DataManager (CORREGIDO)
+        self.dm.registrar_gasto(self.input_concepto.value, monto)
+        
         # 4. Limpiar formulario
         self.input_concepto.value = ""
         self.input_monto.value    = ""
@@ -65,7 +61,7 @@ class GastosView(ft.Container):
 
     def _build_ui(self):
         formulario = ft.Container(
-            bgcolor="#1e293b",
+            bgcolor=ft.Colors.SURFACE,
             padding=40,
             border_radius=15,
             content=ft.Column([
