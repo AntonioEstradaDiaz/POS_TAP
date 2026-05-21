@@ -1,0 +1,17 @@
+[
+    {
+        "fecha": "2026-04-15",
+        "concepto": "Agua",
+        "monto": 100.0
+    },
+    {
+        "fecha": "2026-04-16",
+        "concepto": "agua",
+        "monto": 100.0
+    },
+    {
+        "fecha": "2026-04-16",
+        "concepto": "gas",
+        "monto": 500.0
+    }
+]
