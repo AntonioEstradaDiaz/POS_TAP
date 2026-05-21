@@ -11,9 +11,12 @@ from views.cierre_dia_view import CierreDiaView
 
 def main(page: ft.Page):
     # 1. Configuracion de la ventana
+    page.bgcolor = "#020617"
+
+
     page.title = "POS_TAP - Taller Flet"
     page.theme_mode = ft.ThemeMode.DARK
-    page.bgcolor = "#0f172a"
+    bgcolor=ft.Colors.SURFACE
     page.padding = 0
 
     # 2. Instanciar el cerebro de datos (unico para toda la app)
@@ -35,7 +38,7 @@ def main(page: ft.Page):
         elif idx == 3:
             content_area.content = HistorialView(page, dm)    # Dia 2: Funcional
         elif idx == 4:
-            content_area.content = CierreDiaView()         # Dia 3: Pendiente
+            content_area.content = CierreDiaView(page, dm) # ¡Ya está conectado!
         page.update()
 
     # 5. Barra lateral de navegacion
@@ -43,7 +46,7 @@ def main(page: ft.Page):
         selected_index=0,
         label_type=ft.NavigationRailLabelType.ALL,
         min_width=100,
-        bgcolor="#1e293b",
+        bgcolor=ft.Colors.SURFACE,
         on_change=change_route,
         destinations=[
             ft.NavigationRailDestination(icon=Icons.SHOPPING_CART, label="Ventas"),
