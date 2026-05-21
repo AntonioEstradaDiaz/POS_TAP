@@ -171,15 +171,37 @@ class VentasView(ft.Container):
         # Estado de Datos
         self.carrito   = {}
         self.inventario = self.dm.get_inventario()
+        self.categoria_activa = "Todos"
 
         # Elementos UI Globales de la Vista
         self.lista_ticket       = ft.ListView(expand=True, spacing=10)
         self.txt_total          = ft.Text("$0.00", size=32, weight="bold", color="#38bdf8")
         self.productos_grid     = self._create_empty_grid()
+
+        # Componente del buscador de texto
+        self.txt_buscar = ft.TextField(
+            label="Buscar platillo por nombre...",
+            prefix_icon=Icons.SEARCH,
+            border_color="#38bdf8",
+            color="white",
+            height=45,
+            on_change=self._filtrar_catalogo
+        )
+
+        # Fila horizontal para las categorías
+        self.fila_categorias = ft.Row(
+            spacing=10,
+            scroll=ft.ScrollMode.AUTO
+        )
+
+        # Diálogos declarados (Guardan las funciones de éxito correctas)
         self.add_product_dialog    = AddProductDialog(self.main_page, self.dm, self._on_product_added)
         self.delete_product_dialog = DeleteProductDialog(self.main_page, self.dm, self._on_product_deleted)
 
         self.content = self._build_layout()
+        
+        # Inicializar botones de categorías y dibujar el catálogo por primera vez
+        self._actualizar_botones_categorias()
         self._renderizar_catalogo()
 
     def _create_empty_grid(self) -> ft.GridView:
@@ -187,24 +209,72 @@ class VentasView(ft.Container):
         return ft.GridView(expand=True, max_extent=250, child_aspect_ratio=1.2,
                            spacing=15, run_spacing=15)
 
-    def _renderizar_catalogo(self):
-        """Dibuja en pantalla todas las tarjetas del grid (Nuevo prod + Inventario actual)."""
+    def _actualizar_botones_categorias(self):
+        """Genera los botones de categorías dinámicamente cambiando de color el activo."""
+        categorias = ["Todos", "Comida", "Bebidas", "Postres", "Entradas"]
+        
+        self.fila_categorias.controls.clear()
+        for cat in categorias:
+            es_activa = cat == self.categoria_activa
+            self.fila_categorias.controls.append(
+              ft.Container(
+                    content=ft.Text(cat, color="#0f172a" if es_activa else "white", weight="bold"),
+                    bgcolor="#38bdf8" if es_activa else "#1e293b",
+                    padding=ft.padding.symmetric(horizontal=15, vertical=10),
+                    border_radius=8,
+                    ink=True, # Hace el efecto visual de "click" de Material Design
+                    on_click=lambda e, c=cat: self._cambiar_categoria(c)
+                )
+            )
+
+    def _cambiar_categoria(self, categoria):
+        """Cambia la categoría seleccionada y refresca la interfaz."""
+        self.categoria_activa = categoria
+        self._actualizar_botones_categorias()
+        texto_busqueda = self.txt_buscar.value.strip()
+        self._renderizar_catalogo(texto_busqueda)
+
+    def _filtrar_catalogo(self, e):
+        """Manejador del buscador de texto."""
+        texto_busqueda = self.txt_buscar.value.strip()
+        self._renderizar_catalogo(texto_busqueda)
+
+    def _renderizar_catalogo(self, filtro: str = ""):
+        """Dibuja en pantalla todas las tarjetas filtradas por texto y categoría."""
         self.productos_grid.controls.clear()
 
-        # Tarjeta Especial: "Agregar Nuevo Platillo"
-        self.productos_grid.controls.append(
-            ft.Card(content=ft.Container(
-                content=ft.Column([
-                    ft.Text("Agregar Platillo", weight="bold", size=16),
-                    ft.Text("+", color="#a3e635", size=24, weight="bold"),
-                ], alignment="center", horizontal_alignment="center"),
-                padding=10, ink=True, on_click=self._abrir_dialogo_producto,
-                bgcolor="#1e293b", border_radius=10
-            ))
-        )
+        # Oculta el botón de agregar si hay filtros activos
+        if not filtro and self.categoria_activa == "Todos":
+            self.productos_grid.controls.append(
+                ft.Card(content=ft.Container(
+                    content=ft.Column([
+                        ft.Text("Agregar Platillo", weight="bold", size=16),
+                        ft.Text("+", color="#a3e635", size=24, weight="bold"),
+                    ], alignment="center", horizontal_alignment="center"),
+                    padding=10, ink=True, on_click=self._abrir_dialogo_producto,
+                    bgcolor="#1e293b", border_radius=10
+                ))
+            )
 
-        # Tarjetas dinamicas desde el inventario JSON
+        # Tarjetas dinámicas mapeadas desde el archivo de datos
         for prod, data in self.inventario.items():
+            # Filtro 1: Búsqueda por Texto
+            if filtro and filtro.lower() not in prod.lower():
+                continue
+            
+            # Filtro 2: Búsqueda Inteligente por Categorías
+            if self.categoria_activa != "Todos":
+                palabras_clave = {
+                    "Bebidas": ["bebida", "refresco", "agua", "jugo", "soda", "coca", "cerveza", "clamato"],
+                    "Comida": ["mole", "enchiladas", "chilaquiles", "tlayuda", "taco", "tacos", "pozole", "platillo", "torta"],
+                    "Postres": ["pastel", "flan", "helado", "postre", "nieve"],
+                    "Entradas": ["papas", "nachos", "guacamole", "entrada"]
+                }
+                
+                keywords = palabras_clave.get(self.categoria_activa, [self.categoria_activa.lower()])
+                if not any(kw in prod.lower() for kw in keywords):
+                    continue
+
             self.productos_grid.controls.append(
                 ft.Card(content=ft.Container(
                     content=ft.Column([
@@ -335,7 +405,13 @@ class VentasView(ft.Container):
             ], expand=True)
         )
 
+        seccion_productos = ft.Column([
+            self.txt_buscar,       # Buscador arriba
+            self.fila_categorias,  # Fila de Chips/Botones de categoría
+            self.productos_grid    # Rejilla de platillos abajo
+        ], expand=True, spacing=15)
+
         return ft.Row([
-            ft.Container(content=self.productos_grid, expand=True, padding=20),
+            ft.Container(content=seccion_productos, expand=True, padding=20),
             panel_cobro
         ], expand=True)

@@ -1,6 +1,5 @@
 import flet as ft
 from flet.controls.material.icons import Icons
-
 from core.data_manager import DataManager
 from views.ventas_view import VentasView
 from views.gastos_view import GastosView
