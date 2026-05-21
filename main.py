@@ -1,5 +1,6 @@
 import flet as ft
 from flet.controls.material.icons import Icons
+import os  # <--- Agrega esta línea
 
 from core.data_manager import DataManager
 from views.ventas_view import VentasView
@@ -35,7 +36,7 @@ def main(page: ft.Page):
         elif idx == 3:
             content_area.content = HistorialView(page, dm)    # Dia 2: Funcional
         elif idx == 4:
-            content_area.content = CierreDiaView()         # Dia 3: Pendiente
+            content_area.content = CierreDiaView(page, dm) # ¡Ya está conectado!
         page.update()
 
     # 5. Barra lateral de navegacion
@@ -69,4 +70,8 @@ def main(page: ft.Page):
 
 
 if __name__ == "__main__":
-    ft.run(main)
+    # Obtenemos la ruta exacta donde está tu main.py y le sumamos la carpeta assets
+    ruta_assets = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
+    
+    # Le pasamos esa ruta exacta a Flet
+    ft.run(main, assets_dir=ruta_assets)
