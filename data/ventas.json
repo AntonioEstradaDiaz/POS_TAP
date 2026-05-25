@@ -1,1 +1,38 @@
-[]
+[
+    {
+        "fecha": "2026-05-24",
+        "hora": "15:19",
+        "productos": {
+            "Pozole Rojo": 1,
+            "Chiles Rellenos": 1
+        },
+        "total": 90
+    },
+    {
+        "fecha": "2026-05-24",
+        "hora": "16:02",
+        "productos": {
+            "Pozole Rojo": 1
+        },
+        "total": 50
+    },
+    {
+        "fecha": "2026-05-24",
+        "hora": "16:54",
+        "productos": {
+            "Enchiladas Verdes": 1,
+            "Chiles Rellenos": 1
+        },
+        "total": 75
+    },
+    {
+        "fecha": "2026-05-24",
+        "hora": "17:05",
+        "productos": {
+            "Chiles Rellenos": 1,
+            "Enchiladas Verdes": 1,
+            "Mole Poblano": 1
+        },
+        "total": 120
+    }
+]

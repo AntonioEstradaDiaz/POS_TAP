@@ -1,0 +1,28 @@
+**Explicación de la Mejora:** Módulo de Facturación y Verificación Digital (Ticket con Código QR)
+
+La actualización implementada en el sistema **POS_TAP** añade una capa de modernización, seguridad y automatización al proceso de finalización de compra mediante la integración de un **Ticket Digital con Código QR dinámico**.
+
+Esta mejora transforma el flujo tradicional de venta en una experiencia interactiva mediante los siguientes puntos clave:
+
+ 1. Generación del Comprobante de Pago
+
+Al procesar una venta, el sistema genera de forma automática un ticket digital con formato adaptado para impresoras térmicas. Este incluye el identificador único de la transacción (ID de Venta), la marca de tiempo exacta (fecha y hora) y el desglose detallado de los productos adquiridos junto con sus respectivos subtotales y el total general.
+
+ 2. Vinculación y Código QR Dinámico
+
+La innovación principal radica en la inclusión de un código QR generado en tiempo real utilizando algoritmos de codificación de datos (`qrcode` y `base64`). Este código QR empaqueta de forma segura los metadatos esenciales de la operación.
+
+ 3. Redirección y Verificación Web Automática
+
+Al ser escaneado por cualquier dispositivo móvil (teléfono inteligente o tableta), el código QR actúa como un enlace directo que redirige al usuario hacia una **página web de verificación oficial**. En este sitio web, los datos se contrastan automáticamente para:
+
+* **Validar la autenticidad del ticket**, asegurando que no sea un comprobante falsificado o alterado.
+* **Facilitar el acceso al cliente**, permitiéndole consultar su historial de consumo, descargar una copia digital o solicitar la facturación electrónica del servicio de manera inmediata.
+
+---
+
+### Beneficios Principales de la Mejora:
+
+* **Cero Papel (Eco-friendly):** Permite operar de forma completamente digital sin necesidad de imprimir papel físico si el cliente no lo requiere.
+* **Seguridad Antifraude:** El negocio y el cliente pueden verificar en cualquier momento que la transacción quedó registrada correctamente en la base de datos del servidor web.
+***Experiencia de Usuario Moderna:** Alinea el sistema de punto de venta con los estándares actuales de las grandes cadenas comerciales y restaurantes tecnológicos.
